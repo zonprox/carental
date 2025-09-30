@@ -45,12 +45,12 @@ jobs:
     - name: Install backend dependencies
       run: |
         cd apps/backend
-        npm ci
+        npm install
 
     - name: Install frontend dependencies
       run: |
         cd apps/frontend
-        npm ci
+        npm install
 
     - name: Run backend tests
       run: |
