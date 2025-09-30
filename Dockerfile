@@ -1,14 +1,17 @@
 # Multi-stage build for production
 FROM node:22.20.0-alpine AS frontend-build
 
+# Update npm to v11.6.1
+RUN npm install -g npm@11.6.1
+
 # Set working directory for frontend
-WORKDIR /app/frontend
+WORKDIR /apps/frontend
 
 # Copy frontend package files
 COPY apps/frontend/package*.json ./
 
-# Install frontend dependencies
-RUN npm ci --only=production
+# Install frontend dependencies (using --omit=dev instead of --only=production)
+RUN npm ci --omit=dev
 
 # Copy frontend source code
 COPY apps/frontend/ ./
@@ -28,11 +31,14 @@ RUN apk add --no-cache \
     curl \
     dumb-init
 
+# Update npm to v11.6.1
+RUN npm install -g npm@11.6.1
+
 # Copy backend package files
 COPY apps/backend/package*.json ./
 
-# Install backend dependencies
-RUN npm ci --only=production && npm cache clean --force
+# Install backend dependencies (using --omit=dev instead of --only=production)
+RUN npm ci --omit=dev && npm cache clean --force
 
 # Copy backend source code
 COPY apps/backend/ ./
