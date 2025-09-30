@@ -7,10 +7,6 @@ export default function HomePage() {
   const [cars, setCars] = useState([])
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    fetchCars()
-  }, [fetchCars])
-
   const fetchCars = useCallback(async () => {
     try {
       const response = await fetch('/api/cars')
@@ -26,6 +22,10 @@ export default function HomePage() {
       setLoading(false)
     }
   }, [])
+
+  useEffect(() => {
+    fetchCars()
+  }, [fetchCars])
 
   if (loading) {
     return (
