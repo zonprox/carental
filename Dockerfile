@@ -5,7 +5,7 @@ FROM node:22.20.0-alpine AS frontend-build
 RUN npm install -g npm@11.6.1
 
 # Set working directory for frontend
-WORKDIR /apps/frontend
+WORKDIR /app/frontend
 
 # Copy frontend package files
 COPY apps/frontend/package*.json ./
