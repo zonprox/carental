@@ -44,52 +44,63 @@ A modern, full-stack car rental web application built with the latest technologi
 ## 🚀 Quick Start
 
 ### Prerequisites
-- **Node.js 22.20.0 LTS** or higher
-- **npm 10.0.0** or higher
-- **PostgreSQL 16** (or use Docker)
-- **Git**
+- Node.js >= 22.20.0
+- npm >= 10.0.0
+- Docker & Docker Compose
+- PostgreSQL 15+
 
-### 🐳 Docker Development (Recommended)
+### Installation
 
+1. **Clone the repository**
 ```bash
-# Clone the repository
 git clone https://github.com/yourusername/carental.git
 cd carental
-
-# Start development environment
-npm run docker:dev
-
-# Access the application
-# Frontend: http://localhost:3000
-# Backend API: http://localhost:5000
-# Database: localhost:5432
 ```
 
-### 💻 Local Development
-
+2. **Install dependencies (IMPORTANT: Use npm ci)**
 ```bash
-# Clone and install dependencies
-git clone https://github.com/yourusername/carental.git
-cd carental
+# For production/CI environments
+npm ci
+
+# For development (only if package-lock.json doesn't exist)
 npm install
+```
 
-# Set up environment variables
+3. **Environment setup**
+```bash
+# Copy environment files
+cp .env.example .env.production
 cp apps/backend/.env.example apps/backend/.env
-# Edit apps/backend/.env with your database credentials
+```
 
-# Start PostgreSQL (if not using Docker)
-# Create database: carental_db
+4. **Database setup**
+```bash
+# Start PostgreSQL with Docker
+docker-compose up -d postgres
 
-# Seed the database with sample data
+# Initialize database
 npm run seed
+```
 
-# Start development servers
+5. **Start development servers**
+```bash
+# Start both frontend and backend
 npm run dev
 
-# Access the application
-# Frontend: http://localhost:3000
-# Backend API: http://localhost:5000
+# Or start individually
+npm run dev:frontend  # http://localhost:3000
+npm run dev:backend   # http://localhost:5000
 ```
+
+### 📋 Package Lock File Policy
+
+**IMPORTANT**: This project enforces strict package-lock.json policies. Please read [LOCKFILE_POLICY.md](./LOCKFILE_POLICY.md) for detailed guidelines.
+
+**Quick rules:**
+- ✅ Always commit `package-lock.json`
+- ✅ Use `npm ci` in production/CI
+- ✅ Use `npm install` only for adding new dependencies
+- ❌ Never add `package-lock.json` to `.gitignore`
 
 ## 📁 Project Structure
 

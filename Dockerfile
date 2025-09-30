@@ -12,7 +12,7 @@ COPY apps/frontend/package*.json ./
 
 # Install frontend dependencies (production only)
 ENV NODE_ENV=production
-RUN npm ci
+RUN npm install --production
 
 # Copy frontend source code
 COPY apps/frontend/ ./
@@ -40,7 +40,7 @@ COPY apps/backend/package*.json ./
 
 # Install backend dependencies (production only)
 ENV NODE_ENV=production
-RUN npm ci && npm cache clean --force
+RUN npm install --production && npm cache clean --force
 
 # Copy backend source code
 COPY apps/backend/ ./
