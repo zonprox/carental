@@ -10,8 +10,9 @@ WORKDIR /apps/frontend
 # Copy frontend package files
 COPY apps/frontend/package*.json ./
 
-# Install frontend dependencies (using --omit=dev instead of --only=production)
-RUN npm ci --omit=dev
+# Install frontend dependencies (production only)
+ENV NODE_ENV=production
+RUN npm ci
 
 # Copy frontend source code
 COPY apps/frontend/ ./
@@ -37,8 +38,9 @@ RUN npm install -g npm@11.6.1
 # Copy backend package files
 COPY apps/backend/package*.json ./
 
-# Install backend dependencies (using --omit=dev instead of --only=production)
-RUN npm ci --omit=dev && npm cache clean --force
+# Install backend dependencies (production only)
+ENV NODE_ENV=production
+RUN npm ci && npm cache clean --force
 
 # Copy backend source code
 COPY apps/backend/ ./
