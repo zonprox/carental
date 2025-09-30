@@ -1,0 +1,64 @@
+{
+  "name": "carental-monorepo",
+  "version": "2.0.0",
+  "description": "Modern Car Rental Web Application - Full Stack PERN with shadcn/ui",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.20.0",
+    "npm": ">=10.0.0"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:frontend": "npm run dev --workspace=carental-client",
+    "dev:backend": "npm run dev --workspace=carental-server",
+    "build": "npm run build --workspace=carental-client",
+    "build:frontend": "npm run build --workspace=carental-client",
+    "build:backend": "npm run build --workspace=carental-server",
+    "start": "npm run start --workspace=carental-server",
+    "test": "npm run test --workspaces",
+    "test:frontend": "npm run test --workspace=carental-client",
+    "test:backend": "npm run test --workspace=carental-server",
+    "lint": "npm run lint --workspaces",
+    "lint:fix": "npm run lint:fix --workspaces",
+    "format": "npm run format --workspaces",
+    "clean": "rimraf node_modules apps/*/node_modules apps/*/dist",
+    "seed": "npm run seed --workspace=carental-server",
+    "db:reset": "npm run db:reset --workspace=carental-server",
+    "docker:dev": "docker-compose -f docker-compose.dev.yml up",
+    "docker:prod": "docker-compose up",
+    "docker:build": "docker-compose build",
+    "docker:down": "docker-compose down"
+  },
+  "keywords": [
+    "car-rental",
+    "react",
+    "nodejs",
+    "postgresql",
+    "shadcn",
+    "tailwindcss",
+    "monorepo",
+    "modern",
+    "full-stack"
+  ],
+  "author": "CarRental Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/carental.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/carental/issues"
+  },
+  "homepage": "https://github.com/yourusername/carental#readme",
+  "devDependencies": {
+    "concurrently": "^9.1.0",
+    "rimraf": "^6.0.1",
+    "prettier": "^3.4.2",
+    "eslint": "^9.17.0"
+  }
+}

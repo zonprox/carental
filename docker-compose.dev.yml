@@ -1,0 +1,66 @@
+version: '3.8'
+
+services:
+  postgres-dev:
+    image: postgres:16-alpine
+    container_name: carental-postgres-dev
+    environment:
+      POSTGRES_DB: carental_db
+      POSTGRES_USER: carental_user
+      POSTGRES_PASSWORD: carental_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_dev_data:/var/lib/postgresql/data
+      - ./apps/backend/database/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U carental_user -d carental_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+      target: backend-dev
+    container_name: carental-backend-dev
+    environment:
+      NODE_ENV: development
+      DB_HOST: postgres-dev
+      DB_PORT: 5432
+      DB_NAME: carental_db
+      DB_USER: carental_user
+      DB_PASSWORD: carental_password
+      JWT_SECRET: your-super-secret-jwt-key-change-in-production
+      PORT: 5000
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./apps/backend:/app/apps/backend
+      - /app/apps/backend/node_modules
+    depends_on:
+      postgres-dev:
+        condition: service_healthy
+    command: npm run dev
+
+  frontend-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+      target: frontend-dev
+    container_name: carental-frontend-dev
+    environment:
+      NODE_ENV: development
+      VITE_API_URL: http://localhost:5000/api
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./apps/frontend:/app/apps/frontend
+      - /app/apps/frontend/node_modules
+    depends_on:
+      - backend-dev
+    command: npm run dev
+
+volumes:
+  postgres_dev_data:

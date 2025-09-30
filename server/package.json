@@ -1,0 +1,46 @@
+{
+  "name": "carental-server",
+  "version": "2.0.0",
+  "description": "CarRental backend API server with modern Node.js",
+  "main": "index.js",
+  "type": "module",
+  "engines": {
+    "node": ">=22.20.0",
+    "npm": ">=10.0.0"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "init-db": "node scripts/init-db.js",
+    "test": "jest --detectOpenHandles",
+    "test:watch": "jest --watch --detectOpenHandles",
+    "lint": "eslint . --ext .js",
+    "lint:fix": "eslint . --ext .js --fix",
+    "format": "prettier --write .",
+    "seed": "node scripts/seedDatabase.js",
+    "db:reset": "npm run seed"
+  },
+  "keywords": ["nodejs", "express", "postgresql", "jwt", "api", "modern"],
+  "author": "CarRental Team",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^5.0.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "pg": "^8.13.1",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2",
+    "express-validator": "^7.2.0",
+    "helmet": "^8.0.0",
+    "express-rate-limit": "^7.4.1",
+    "compression": "^1.7.5"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10",
+    "jest": "^29.7.0",
+    "supertest": "^7.0.0",
+    "eslint": "^9.17.0",
+    "prettier": "^3.4.2",
+    "@eslint/js": "^9.17.0"
+  }
+}
