@@ -10,9 +10,8 @@ WORKDIR /app/frontend
 # Copy frontend package files
 COPY apps/frontend/package*.json ./
 
-# Install frontend dependencies (production only)
-ENV NODE_ENV=production
-RUN npm install --production
+# Install all frontend dependencies (including devDependencies for build)
+RUN npm install
 
 # Copy frontend source code
 COPY apps/frontend/ ./
