@@ -25,13 +25,7 @@ import {
   Monitor,
   ChevronsUpDown,
   Settings,
-  Bell,
-  LifeBuoy,
   Shield,
-  LayoutDashboard,
-  Users,
-  Car,
-  FileText,
   Home,
 } from 'lucide-react'
 import { t } from '@/locales'
@@ -126,28 +120,6 @@ export default function UserMenu({ user, onLogout }) {
         
         <DropdownMenuSeparator />
         
-        {/* Admin Quick Access */}
-        <DropdownMenuGroup>
-          <DropdownMenuItem onClick={() => handleNavigate('/admin/dashboard')} className="cursor-pointer">
-            <LayoutDashboard className="mr-2 h-4 w-4" />
-            <span>Tổng quan</span>
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => handleNavigate('/admin/cars')} className="cursor-pointer">
-            <Car className="mr-2 h-4 w-4" />
-            <span>Quản lý xe</span>
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => handleNavigate('/admin/users')} className="cursor-pointer">
-            <Users className="mr-2 h-4 w-4" />
-            <span>Quản lý người dùng</span>
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => handleNavigate('/admin/bookings')} className="cursor-pointer">
-            <FileText className="mr-2 h-4 w-4" />
-            <span>Quản lý đơn thuê</span>
-          </DropdownMenuItem>
-        </DropdownMenuGroup>
-        
-        <DropdownMenuSeparator />
-        
         {/* Go to Homepage */}
         <DropdownMenuGroup>
           <DropdownMenuItem onClick={() => handleNavigate('/')} className="cursor-pointer">
@@ -162,15 +134,11 @@ export default function UserMenu({ user, onLogout }) {
         <DropdownMenuGroup>
           <DropdownMenuItem className="cursor-pointer">
             <User className="mr-2 h-4 w-4" />
-            <span>{t('userMenu.profile')}</span>
+            <span>Hồ sơ</span>
           </DropdownMenuItem>
           <DropdownMenuItem className="cursor-pointer">
             <Settings className="mr-2 h-4 w-4" />
-            <span>{t('userMenu.settings')}</span>
-          </DropdownMenuItem>
-          <DropdownMenuItem className="cursor-pointer">
-            <Bell className="mr-2 h-4 w-4" />
-            <span>{t('userMenu.notifications')}</span>
+            <span>Cài đặt</span>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         
@@ -200,16 +168,6 @@ export default function UserMenu({ user, onLogout }) {
               </DropdownMenuRadioGroup>
             </DropdownMenuSubContent>
           </DropdownMenuSub>
-        </DropdownMenuGroup>
-        
-        <DropdownMenuSeparator />
-        
-        {/* Support Section */}
-        <DropdownMenuGroup>
-          <DropdownMenuItem className="cursor-pointer">
-            <LifeBuoy className="mr-2 h-4 w-4" />
-            <span>Hỗ trợ</span>
-          </DropdownMenuItem>
         </DropdownMenuGroup>
         
         <DropdownMenuSeparator />

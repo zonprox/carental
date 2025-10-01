@@ -1,0 +1,98 @@
+feat(v2.3.4): Implement role-based user menu differentiation
+
+This update introduces distinct user menu experiences for admin and regular
+users, improving UX and making role-specific features more accessible.
+
+## User Menu Changes
+
+### UserNavMenu (Public/User Pages)
+- Add conditional admin panel access (visible only to admin role)
+- Implement admin detection via user role check
+- Add rental-focused actions (bookings, favorites)
+- Include theme switcher with light/dark/system modes
+- Add ChevronDown icon to trigger button
+- Enhance header with muted background and ring-bordered avatar
+- Add navigation to homepage, dashboard, and profile
+- Implement settings and logout functionality
+
+### Admin UserMenu (Admin Panel Sidebar)
+- Add distinctive orange admin branding
+  * Orange background (light/dark mode optimized)
+  * Orange avatar ring and fallback colors
+  * Left orange border for visual emphasis
+  * Shield icon next to admin name
+- Implement quick access links to admin pages
+  * Dashboard overview
+  * Car management
+  * User management
+  * Booking management
+- Add "Back to Homepage" link for easy navigation
+- Include account settings, notifications, and profile
+- Integrate theme switcher (matching UserNavMenu)
+- Add support section
+- Use consistent Vietnamese translations
+
+## Visual Differentiation
+
+### Color Schemes
+- **UserNavMenu**: Neutral blue theme (bg-muted/50, ring-border)
+- **Admin UserMenu**: Orange admin theme (bg-orange-50, ring-orange-200)
+
+### Menu Structure
+- **UserNavMenu**: 9-10 items focused on user experience and rentals
+- **Admin UserMenu**: 13 items focused on system management
+
+### Role-Based Features
+- Admin users see "Trang quản trị" link in UserNavMenu (top position)
+- Regular users only see user-focused menu items
+- Admin panel menu shows quick access to all management pages
+
+## Technical Improvements
+
+### Code Quality
+- Add useNavigate hook for both menus
+- Implement handleNavigate function for menu navigation
+- Add isAdmin role check (user?.role === 'admin')
+- Use DropdownMenuGroup for logical item grouping
+- Properly implement DropdownMenuSub for theme selection
+
+### Component Enhancements
+- Import additional Lucide icons (Shield, Home, Car, Users, FileText)
+- Use consistent className patterns for cursor-pointer
+- Implement proper dark mode color classes (dark:bg-*, dark:text-*)
+- Add transition effects and hover states
+
+## Documentation
+
+### Cleanup
+- Remove 9 redundant documentation files
+  * USERMENU_DESIGN.md
+  * USERMENU_VIETNAMESE.md
+  * DARK_MODE_GUIDE.md
+  * OPTIMIZATION_COMPLETE.md
+  * PROJECT_OPTIMIZATION.md
+  * IMPROVEMENTS_v2.3.0.md
+  * NAVBAR_UPDATE_v2.3.1.md
+  * USER_MENU_UPDATE_v2.3.2.md
+  * USER_SYNC_v2.3.3.md
+
+### New Documentation
+- Add CHANGELOG.md with comprehensive version history
+- Keep POPUP_DIFFERENTIATION_v2.3.4.md for detailed feature documentation
+
+## Build Statistics
+- Bundle: 347.16 kB (105.13 kB gzipped) [+2.97 kB]
+- CSS: 47.14 kB (8.41 kB gzipped) [+0.85 kB]
+- Build time: 5.98s
+- No linter errors
+
+## Benefits
+✅ Clear visual distinction between admin and user roles
+✅ Context-appropriate menu items for each role
+✅ Improved navigation with quick access links
+✅ Professional admin branding with orange theme
+✅ Better UX with focused, relevant menu options
+✅ Cleaner documentation structure
+
+BREAKING CHANGE: None - backward compatible with existing implementations
+

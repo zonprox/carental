@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -12,6 +12,28 @@ export default function Login() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const navigate = useNavigate()
+
+  // Redirect if already logged in
+  useEffect(() => {
+    const token = localStorage.getItem('token')
+    const userStr = localStorage.getItem('user')
+    
+    if (token && userStr) {
+      try {
+        const user = JSON.parse(userStr)
+        // Redirect based on role
+        if (user.role === 'admin') {
+          navigate('/admin/dashboard', { replace: true })
+        } else {
+          navigate('/user/dashboard', { replace: true })
+        }
+      } catch (error) {
+        // If parsing fails, clear invalid data
+        localStorage.removeItem('token')
+        localStorage.removeItem('user')
+      }
+    }
+  }, [navigate])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
