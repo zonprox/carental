@@ -1,8 +1,9 @@
 import { Link, useLocation } from 'react-router-dom'
-import { Car, Users, LayoutDashboard, LogOut, Menu, X } from 'lucide-react'
+import { Car, Users, LayoutDashboard, Menu, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useState } from 'react'
 import { cn } from '@/lib/utils'
+import UserMenu from './UserMenu'
 
 const navigation = [
   { name: 'Dashboard', href: '/admin/dashboard', icon: LayoutDashboard },
@@ -73,24 +74,30 @@ export default function Sidebar({ onLogout }) {
           </nav>
 
           {/* Footer */}
-          <div className="border-t px-4 py-4 space-y-2">
-            <Button
-              variant="ghost"
-              className="w-full justify-start"
-              asChild
-            >
-              <a href="/" target="_blank" rel="noopener noreferrer">
-                Xem trang chủ
-              </a>
-            </Button>
-            <Button
-              variant="ghost"
-              className="w-full justify-start text-red-600 hover:text-red-700 hover:bg-red-50"
-              onClick={onLogout}
-            >
-              <LogOut className="h-4 w-4 mr-2" />
-              Đăng xuất
-            </Button>
+          <div className="border-t px-3 py-3">
+            <div className="space-y-2">
+              <Button
+                variant="ghost"
+                className="w-full justify-start text-sm h-8"
+                asChild
+              >
+                <a href="/" target="_blank" rel="noopener noreferrer">
+                  Xem trang chủ
+                </a>
+              </Button>
+              
+              {/* User Menu */}
+              <div className="pt-1">
+                <UserMenu 
+                  user={{
+                    name: 'Admin User',
+                    email: 'admin@carental.com',
+                    avatar: null
+                  }}
+                  onLogout={onLogout}
+                />
+              </div>
+            </div>
           </div>
         </div>
       </div>

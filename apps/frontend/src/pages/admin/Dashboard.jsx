@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import { Car, Users, DollarSign, TrendingUp, RefreshCw, Download, ArrowUpRight, UserCheck } from 'lucide-react'
 import AdminLayout from '@/components/admin/AdminLayout'
+import { messages } from '@/lib/messages'
 
 const USE_MOCK_UI = false
 
@@ -63,40 +64,40 @@ export default function Dashboard() {
 
   const statCards = [
     {
-      title: 'Total Vehicles',
-      label: 'Tổng số xe',
+      title: messages.dashboard.stats.totalVehicles.title,
+      label: messages.dashboard.stats.totalVehicles.label,
       value: stats.totalCars,
       delta: stats.totalCars > 0 ? '+12%' : '0%',
       deltaType: 'increase',
       icon: Car
     },
     {
-      title: 'Available',
-      label: 'Xe sẵn sàng',
+      title: messages.dashboard.stats.available.title,
+      label: messages.dashboard.stats.available.label,
       value: stats.availableCars,
       delta: stats.availableCars > 0 ? '+8%' : '0%',
       deltaType: 'increase',
       icon: Car
     },
     {
-      title: 'With Driver',
-      label: 'Có tài xế',
+      title: messages.dashboard.stats.withDriver.title,
+      label: messages.dashboard.stats.withDriver.label,
       value: stats.carsWithDriver,
       delta: '0%',
       deltaType: 'neutral',
       icon: UserCheck
     },
     {
-      title: 'Bookings',
-      label: 'Lượt thuê',
+      title: messages.dashboard.stats.bookings.title,
+      label: messages.dashboard.stats.bookings.label,
       value: stats.totalBookings,
       delta: '0%',
       deltaType: 'neutral',
       icon: TrendingUp
     },
     {
-      title: 'Total Value',
-      label: 'Tổng giá trị',
+      title: messages.dashboard.stats.totalValue.title,
+      label: messages.dashboard.stats.totalValue.label,
       value: `${stats.revenue.toLocaleString('vi-VN')}đ`,
       delta: stats.revenue > 0 ? '+5%' : '0%',
       deltaType: 'increase',
@@ -110,7 +111,7 @@ export default function Dashboard() {
         <div className="flex h-[450px] items-center justify-center rounded-lg border border-dashed">
           <div className="flex flex-col items-center gap-2 text-center">
             <RefreshCw className="h-8 w-8 animate-spin text-muted-foreground" />
-            <p className="text-sm text-muted-foreground">Đang tải dữ liệu...</p>
+            <p className="text-sm text-muted-foreground">{messages.dashboard.loading}</p>
           </div>
         </div>
       </AdminLayout>
@@ -123,9 +124,9 @@ export default function Dashboard() {
         {/* App Header */}
         <div className="flex items-center justify-between space-y-2">
           <div>
-            <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
+            <h2 className="text-3xl font-bold tracking-tight">{messages.dashboard.title}</h2>
             <p className="text-muted-foreground">
-              Tổng quan hệ thống quản lý thuê xe
+              {messages.dashboard.subtitle}
             </p>
           </div>
           <div className="flex items-center gap-2">
@@ -136,7 +137,7 @@ export default function Dashboard() {
               disabled={loading}
             >
               <RefreshCw className="mr-2 h-4 w-4" />
-              Refresh
+              {messages.dashboard.refresh}
             </Button>
             <Button
               variant="outline"
@@ -144,7 +145,7 @@ export default function Dashboard() {
               onClick={handleExport}
             >
               <Download className="mr-2 h-4 w-4" />
-              Export
+              {messages.dashboard.export}
             </Button>
           </div>
         </div>
@@ -173,7 +174,7 @@ export default function Dashboard() {
                       'text-muted-foreground'
                     }`}>
                       <ArrowUpRight className="mr-1 h-3 w-3" />
-                      {stat.delta} from last month
+                      {stat.delta} {messages.dashboard.stats.deltaText}
                     </div>
                   )}
                 </CardContent>
@@ -186,18 +187,18 @@ export default function Dashboard() {
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
           <Card className="col-span-4">
             <CardHeader>
-              <CardTitle>Biểu đồ tổng quan</CardTitle>
+              <CardTitle>{messages.dashboard.charts.overview.title}</CardTitle>
               <CardDescription>
-                Thống kê hoạt động theo thời gian
+                {messages.dashboard.charts.overview.description}
               </CardDescription>
             </CardHeader>
             <CardContent className="pl-2">
               <div className="flex h-[300px] items-center justify-center rounded-lg border border-dashed">
                 <div className="flex flex-col items-center gap-1 text-center">
                   <TrendingUp className="h-8 w-8 text-muted-foreground" />
-                  <h3 className="text-sm font-medium">Chart Placeholder</h3>
+                  <h3 className="text-sm font-medium">{messages.dashboard.charts.overview.placeholder}</h3>
                   <p className="text-xs text-muted-foreground max-w-[200px]">
-                    Biểu đồ sẽ được hiển thị tại đây
+                    {messages.dashboard.charts.overview.placeholderDesc}
                   </p>
                 </div>
               </div>
@@ -206,18 +207,18 @@ export default function Dashboard() {
 
           <Card className="col-span-3">
             <CardHeader>
-              <CardTitle>Hoạt động gần đây</CardTitle>
+              <CardTitle>{messages.dashboard.charts.activity.title}</CardTitle>
               <CardDescription>
-                Các hoạt động mới nhất trong hệ thống
+                {messages.dashboard.charts.activity.description}
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="flex h-[300px] items-center justify-center rounded-lg border border-dashed">
                 <div className="flex flex-col items-center gap-1 text-center">
                   <Users className="h-8 w-8 text-muted-foreground" />
-                  <h3 className="text-sm font-medium">No Activity</h3>
+                  <h3 className="text-sm font-medium">{messages.dashboard.charts.activity.empty}</h3>
                   <p className="text-xs text-muted-foreground max-w-[200px]">
-                    Chưa có hoạt động nào được ghi nhận
+                    {messages.dashboard.charts.activity.emptyDesc}
                   </p>
                 </div>
               </div>
@@ -229,14 +230,14 @@ export default function Dashboard() {
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           <Card>
             <CardHeader>
-              <CardTitle>Xe phổ biến</CardTitle>
-              <CardDescription>Top xe được thuê nhiều nhất</CardDescription>
+              <CardTitle>{messages.dashboard.charts.popular.title}</CardTitle>
+              <CardDescription>{messages.dashboard.charts.popular.description}</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="flex h-[200px] items-center justify-center rounded-lg border border-dashed">
                 <div className="flex flex-col items-center gap-1 text-center">
                   <Car className="h-6 w-6 text-muted-foreground" />
-                  <p className="text-xs text-muted-foreground">Chưa có dữ liệu</p>
+                  <p className="text-xs text-muted-foreground">{messages.dashboard.charts.popular.empty}</p>
                 </div>
               </div>
             </CardContent>
@@ -244,14 +245,14 @@ export default function Dashboard() {
 
           <Card>
             <CardHeader>
-              <CardTitle>Doanh thu</CardTitle>
-              <CardDescription>Thống kê doanh thu tháng này</CardDescription>
+              <CardTitle>{messages.dashboard.charts.revenue.title}</CardTitle>
+              <CardDescription>{messages.dashboard.charts.revenue.description}</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="flex h-[200px] items-center justify-center rounded-lg border border-dashed">
                 <div className="flex flex-col items-center gap-1 text-center">
                   <DollarSign className="h-6 w-6 text-muted-foreground" />
-                  <p className="text-xs text-muted-foreground">Chưa có dữ liệu</p>
+                  <p className="text-xs text-muted-foreground">{messages.dashboard.charts.revenue.empty}</p>
                 </div>
               </div>
             </CardContent>
@@ -259,14 +260,14 @@ export default function Dashboard() {
 
           <Card>
             <CardHeader>
-              <CardTitle>Đánh giá</CardTitle>
-              <CardDescription>Phản hồi từ khách hàng</CardDescription>
+              <CardTitle>{messages.dashboard.charts.reviews.title}</CardTitle>
+              <CardDescription>{messages.dashboard.charts.reviews.description}</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="flex h-[200px] items-center justify-center rounded-lg border border-dashed">
                 <div className="flex flex-col items-center gap-1 text-center">
                   <Users className="h-6 w-6 text-muted-foreground" />
-                  <p className="text-xs text-muted-foreground">Chưa có đánh giá</p>
+                  <p className="text-xs text-muted-foreground">{messages.dashboard.charts.reviews.empty}</p>
                 </div>
               </div>
             </CardContent>
