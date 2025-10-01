@@ -19,10 +19,10 @@ export default function AdminLayout({ children }) {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
+    <div className="min-h-screen bg-gray-50">
       <Sidebar onLogout={handleLogout} />
-      <div className="flex-1 flex flex-col lg:pl-0 pt-16 lg:pt-0">
-        <main className="flex-1 overflow-y-auto">
+      <div className="lg:pl-64">
+        <main className="min-h-screen">
           {children}
         </main>
       </div>
