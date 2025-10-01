@@ -30,6 +30,7 @@ CREATE TABLE IF NOT EXISTS cars (
 CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
     username VARCHAR(50) UNIQUE NOT NULL,
+    name VARCHAR(100),
     email VARCHAR(100) UNIQUE NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
     role VARCHAR(20) DEFAULT 'admin' CHECK (role IN ('admin', 'user')),
@@ -83,8 +84,8 @@ CREATE TRIGGER update_bookings_updated_at BEFORE UPDATE ON bookings
 
 -- Insert default admin user (password: admin123)
 -- Note: In production, use a stronger password and proper hashing
-INSERT INTO users (username, email, password_hash, role) 
-VALUES ('admin', 'admin@carental.com', '$2b$10$rOzJqQjQjQjQjQjQjQjQjOzJqQjQjQjQjQjQjQjQjQjQjQjQjQjQjQ', 'admin')
+INSERT INTO users (username, name, email, password_hash, role) 
+VALUES ('admin', 'Quản Trị Viên', 'admin@carental.com', '$2b$10$rOzJqQjQjQjQjQjQjQjQjOzJqQjQjQjQjQjQjQjQjQjQjQjQjQjQjQ', 'admin')
 ON CONFLICT (username) DO NOTHING;
 
 -- Add some sample data comments

@@ -19,10 +19,10 @@ export default function AdminLayout({ children }) {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background">
       <Sidebar onLogout={handleLogout} />
       <div className="lg:pl-64">
-        <main className="min-h-screen">
+        <main className="min-h-screen bg-background">
           {children}
         </main>
       </div>

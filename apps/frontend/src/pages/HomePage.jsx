@@ -1,12 +1,17 @@
-import { useState, useEffect, useMemo, useCallback } from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { useState, useEffect, useCallback } from 'react'
 import { Button } from '@/components/ui/button'
-import { Car, MapPin, Users, Fuel } from 'lucide-react'
+import { CarCard } from '@/components/ui/car-card'
+import { LoadingSpinner } from '@/components/ui/loading-spinner'
+import { EmptyState } from '@/components/ui/empty-state'
+import { ThemeToggle } from '@/components/ThemeToggle'
+import UserNavMenu from '@/components/UserNavMenu'
+import { Car } from 'lucide-react'
 import { t } from '@/locales'
 
 export default function HomePage() {
   const [cars, setCars] = useState([])
   const [loading, setLoading] = useState(true)
+  const [user, setUser] = useState(null)
 
   const fetchCars = useCallback(async () => {
     try {
@@ -26,36 +31,51 @@ export default function HomePage() {
 
   useEffect(() => {
     fetchCars()
+    
+    // Check if user is logged in
+    const token = localStorage.getItem('token')
+    const userData = localStorage.getItem('user')
+    if (token && userData) {
+      try {
+        setUser(JSON.parse(userData))
+      } catch (error) {
+        console.error('Error parsing user data:', error)
+      }
+    }
   }, [fetchCars])
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <Car className="h-12 w-12 animate-spin mx-auto mb-4" />
-          <p>Đang tải danh sách xe...</p>
-        </div>
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <LoadingSpinner size="lg" text="Đang tải danh sách xe..." icon={Car} />
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-background dark:to-background">
       {/* Header */}
-      <header className="bg-white shadow-sm sticky top-0 z-50">
+      <header className="bg-card shadow-sm sticky top-0 z-50 border-b backdrop-blur-sm bg-card/95">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
-              <Car className="h-8 w-8 text-blue-600" />
-              <h1 className="text-2xl font-bold text-gray-900">CarRental</h1>
+              <Car className="h-8 w-8 text-primary" />
+              <h1 className="text-2xl font-bold text-foreground">CarRental</h1>
             </div>
             <div className="flex items-center gap-3">
-              <Button variant="outline" asChild>
-                <a href="/login">{t('home.login')}</a>
-              </Button>
-              <Button asChild>
-                <a href="/login">{t('home.rentNow')}</a>
-              </Button>
+              <ThemeToggle />
+              {user ? (
+                <UserNavMenu user={user} />
+              ) : (
+                <>
+                  <Button variant="outline" asChild>
+                    <a href="/login">{t('home.login')}</a>
+                  </Button>
+                  <Button asChild>
+                    <a href="/register">Đăng ký</a>
+                  </Button>
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -64,83 +84,38 @@ export default function HomePage() {
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold text-gray-900 mb-4">
+          <h2 className="text-4xl font-bold text-foreground mb-4">
             {t('home.title')}
           </h2>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
             {t('home.subtitle')}
           </p>
         </div>
 
         {/* Cars Grid */}
         {cars.length === 0 ? (
-          <div className="text-center py-12">
-            <Car className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
-              {t('home.empty')}
-            </h3>
-            <p className="text-gray-500">
-              {t('home.emptyDesc')}
-            </p>
-          </div>
+          <EmptyState
+            icon={Car}
+            title={t('home.empty')}
+            description={t('home.emptyDesc')}
+          />
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {cars.map((car) => (
-              <Card key={car.id} className="overflow-hidden hover:shadow-lg transition-shadow">
-                <div className="aspect-video bg-gray-200 relative">
-                  {car.image_url ? (
-                    <img
-                      src={car.image_url}
-                      alt={car.name}
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center">
-                      <Car className="h-16 w-16 text-gray-400" />
-                    </div>
-                  )}
-                </div>
-                <CardHeader>
-                  <CardTitle className="text-xl">{car.name}</CardTitle>
-                  <CardDescription>{car.brand} - {car.year}</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-2 mb-4">
-                    <div className="flex items-center text-sm text-gray-600">
-                      <Users className="h-4 w-4 mr-2" />
-                      {car.seats} {t('home.carDetails.seats')}
-                    </div>
-                    <div className="flex items-center text-sm text-gray-600">
-                      <Fuel className="h-4 w-4 mr-2" />
-                      {car.fuel_type}
-                    </div>
-                    <div className="flex items-center text-sm text-gray-600">
-                      <MapPin className="h-4 w-4 mr-2" />
-                      {car.location || 'Hà Nội'}
-                    </div>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <span className="text-2xl font-bold text-blue-600">
-                        {car.price_per_day?.toLocaleString('vi-VN')}đ
-                      </span>
-                      <span className="text-sm text-gray-500">{t('home.carDetails.perDay')}</span>
-                    </div>
-                    <Button>
-                      {t('home.rentNow')}
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
+              <CarCard 
+                key={car.id} 
+                car={car}
+                onRent={(car) => window.location.href = '/login'}
+              />
             ))}
           </div>
         )}
       </main>
 
       {/* Footer */}
-      <footer className="bg-white border-t mt-16">
+      <footer className="bg-card border-t mt-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="text-center text-gray-600">
+          <div className="text-center text-muted-foreground">
             <p>&copy; {new Date().getFullYear()} CarRental. {t('home.footer')}</p>
           </div>
         </div>

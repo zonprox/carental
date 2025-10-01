@@ -19,10 +19,10 @@ export default function Sidebar({ onLogout }) {
   return (
     <>
       {/* Mobile menu button */}
-      <div className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-white border-b px-4 py-3 flex items-center justify-between">
+      <div className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-card border-b px-4 py-3 flex items-center justify-between">
         <div className="flex items-center space-x-2">
-          <Car className="h-6 w-6 text-blue-600" />
-          <h1 className="text-lg font-bold text-gray-900">CarRental Admin</h1>
+          <Car className="h-6 w-6 text-primary" />
+          <h1 className="text-lg font-bold text-foreground">CarRental Admin</h1>
         </div>
         <Button
           variant="ghost"
@@ -36,17 +36,17 @@ export default function Sidebar({ onLogout }) {
       {/* Sidebar */}
       <div
         className={cn(
-          "fixed inset-y-0 left-0 z-40 w-64 bg-white border-r transform transition-transform duration-200 ease-in-out lg:translate-x-0",
+          "fixed inset-y-0 left-0 z-40 w-64 bg-card border-r admin-sidebar transform transition-transform duration-200 ease-in-out lg:translate-x-0",
           isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
         )}
       >
         <div className="flex flex-col h-full">
           {/* Logo */}
           <div className="flex items-center space-x-2 px-6 py-6 border-b">
-            <Car className="h-8 w-8 text-blue-600" />
+            <Car className="h-8 w-8 text-primary" />
             <div>
-              <h1 className="text-xl font-bold text-gray-900">CarRental</h1>
-              <p className="text-xs text-gray-500">Admin Panel</p>
+              <h1 className="text-xl font-bold text-foreground">CarRental</h1>
+              <p className="text-xs text-muted-foreground">Admin Panel</p>
             </div>
           </div>
 
@@ -63,8 +63,8 @@ export default function Sidebar({ onLogout }) {
                   className={cn(
                     "flex items-center space-x-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
                     isActive
-                      ? "bg-blue-50 text-blue-600"
-                      : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
+                      ? "bg-primary/10 text-primary dark:bg-primary/20"
+                      : "text-foreground/70 hover:bg-accent hover:text-foreground"
                   )}
                 >
                   <Icon className="h-5 w-5" />
@@ -77,11 +77,21 @@ export default function Sidebar({ onLogout }) {
           {/* Footer */}
           <div className="border-t px-3 py-4">
             <UserMenu 
-              user={{
-                name: 'Admin User',
-                email: 'admin@carental.com',
-                avatar: null
-              }}
+              user={(() => {
+                const userData = localStorage.getItem('user')
+                if (userData) {
+                  try {
+                    return JSON.parse(userData)
+                  } catch (error) {
+                    console.error('Error parsing user data:', error)
+                  }
+                }
+                return {
+                  name: 'Quản Trị Viên',
+                  email: 'admin@carental.com',
+                  avatar: null
+                }
+              })()}
               onLogout={onLogout}
             />
           </div>

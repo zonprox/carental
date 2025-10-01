@@ -1,7 +1,14 @@
 import { useState, useEffect } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Car, Users, DollarSign, TrendingUp, RefreshCw, Download, ArrowUpRight, UserCheck } from 'lucide-react'
+import { PageContainer, PageHeader } from '@/components/ui/page-header'
+import { StatCard } from '@/components/ui/stat-card'
+import { LoadingPage } from '@/components/ui/loading-spinner'
+import { ChartPlaceholder, FeaturePlaceholder } from '@/components/ui/chart-placeholder'
+import { 
+  Car, Users, DollarSign, TrendingUp, RefreshCw, Download, UserCheck,
+  BarChart3, Calendar, Clock, Star
+} from 'lucide-react'
 import AdminLayout from '@/components/admin/AdminLayout'
 import { t } from '@/locales'
 
@@ -108,172 +115,90 @@ export default function Dashboard() {
   if (loading) {
     return (
       <AdminLayout>
-        <div className="flex h-[450px] items-center justify-center rounded-lg border border-dashed">
-          <div className="flex flex-col items-center gap-2 text-center">
-            <RefreshCw className="h-8 w-8 animate-spin text-muted-foreground" />
-            <p className="text-sm text-muted-foreground">{t('dashboard.loading')}</p>
-          </div>
-        </div>
+        <LoadingPage text={t('dashboard.loading')} icon={RefreshCw} />
       </AdminLayout>
     )
   }
 
   return (
     <AdminLayout>
-      <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
-        {/* App Header */}
-        <div className="flex items-center justify-between space-y-2">
-          <div>
-            <h2 className="text-3xl font-bold tracking-tight">{t('dashboard.title')}</h2>
-            <p className="text-muted-foreground">
-              {t('dashboard.subtitle')}
-            </p>
-          </div>
-          <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleRefresh}
-              disabled={loading}
-            >
-              <RefreshCw className="mr-2 h-4 w-4" />
-              {t('common.refresh')}
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleExport}
-            >
-              <Download className="mr-2 h-4 w-4" />
-              {t('common.export')}
-            </Button>
-          </div>
-        </div>
+      <PageContainer>
+        <PageHeader 
+          title={t('dashboard.title')}
+          description={t('dashboard.subtitle')}
+        >
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleRefresh}
+            disabled={loading}
+          >
+            <RefreshCw className="mr-2 h-4 w-4" />
+            {t('common.refresh')}
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleExport}
+          >
+            <Download className="mr-2 h-4 w-4" />
+            {t('common.export')}
+          </Button>
+        </PageHeader>
 
         {/* Stats Grid */}
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
-          {statCards.map((stat) => {
-            const Icon = stat.icon
-            return (
-              <Card key={stat.title}>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">
-                    {stat.title}
-                  </CardTitle>
-                  <Icon className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">{stat.value}</div>
-                  <p className="text-xs text-muted-foreground">
-                    {stat.label}
-                  </p>
-                  {stat.delta !== '0%' && (
-                    <div className={`flex items-center pt-1 text-xs ${
-                      stat.deltaType === 'increase' ? 'text-green-600' : 
-                      stat.deltaType === 'decrease' ? 'text-red-600' : 
-                      'text-muted-foreground'
-                    }`}>
-                      <ArrowUpRight className="mr-1 h-3 w-3" />
-                      {stat.delta} {t('dashboard.stats.deltaText')}
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            )
-          })}
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5">
+          {statCards.map((stat) => (
+            <StatCard
+              key={stat.title}
+              title={stat.title}
+              value={stat.value}
+              label={stat.label}
+              delta={`${stat.delta} ${t('dashboard.stats.deltaText')}`}
+              deltaType={stat.deltaType}
+              icon={stat.icon}
+            />
+          ))}
         </div>
 
-        {/* Charts Placeholder */}
+        {/* Charts Section */}
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-          <Card className="col-span-4">
-            <CardHeader>
-              <CardTitle>{t('dashboard.charts.overview.title')}</CardTitle>
-              <CardDescription>
-                {t('dashboard.charts.overview.description')}
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="pl-2">
-              <div className="flex h-[300px] items-center justify-center rounded-lg border border-dashed">
-                <div className="flex flex-col items-center gap-1 text-center">
-                  <TrendingUp className="h-8 w-8 text-muted-foreground" />
-                  <h3 className="text-sm font-medium">{t('dashboard.charts.overview.placeholder')}</h3>
-                  <p className="text-xs text-muted-foreground max-w-[200px]">
-                    {t('dashboard.charts.overview.placeholderDesc')}
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          <ChartPlaceholder
+            className="col-span-4"
+            type="line"
+            title={t('dashboard.charts.overview.title')}
+            description={t('dashboard.charts.overview.description')}
+          />
 
-          <Card className="col-span-3">
-            <CardHeader>
-              <CardTitle>{t('dashboard.charts.activity.title')}</CardTitle>
-              <CardDescription>
-                {t('dashboard.charts.activity.description')}
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="flex h-[300px] items-center justify-center rounded-lg border border-dashed">
-                <div className="flex flex-col items-center gap-1 text-center">
-                  <Users className="h-8 w-8 text-muted-foreground" />
-                  <h3 className="text-sm font-medium">{t('dashboard.charts.activity.empty')}</h3>
-                  <p className="text-xs text-muted-foreground max-w-[200px]">
-                    {t('dashboard.charts.activity.emptyDesc')}
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          <ChartPlaceholder
+            className="col-span-3"
+            type="activity"
+            title={t('dashboard.charts.activity.title')}
+            description={t('dashboard.charts.activity.description')}
+          />
         </div>
 
-        {/* Additional Info */}
+        {/* Features Section */}
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          <Card>
-            <CardHeader>
-              <CardTitle>{t('dashboard.charts.popular.title')}</CardTitle>
-              <CardDescription>{t('dashboard.charts.popular.description')}</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="flex h-[200px] items-center justify-center rounded-lg border border-dashed">
-                <div className="flex flex-col items-center gap-1 text-center">
-                  <Car className="h-6 w-6 text-muted-foreground" />
-                  <p className="text-xs text-muted-foreground">{t('dashboard.charts.popular.empty')}</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          <FeaturePlaceholder
+            icon={BarChart3}
+            title={t('dashboard.charts.popular.title')}
+            description={t('dashboard.charts.popular.emptyDesc')}
+          />
 
-          <Card>
-            <CardHeader>
-              <CardTitle>{t('dashboard.charts.revenue.title')}</CardTitle>
-              <CardDescription>{t('dashboard.charts.revenue.description')}</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="flex h-[200px] items-center justify-center rounded-lg border border-dashed">
-                <div className="flex flex-col items-center gap-1 text-center">
-                  <DollarSign className="h-6 w-6 text-muted-foreground" />
-                  <p className="text-xs text-muted-foreground">{t('dashboard.charts.revenue.empty')}</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          <FeaturePlaceholder
+            icon={TrendingUp}
+            title={t('dashboard.charts.revenue.title')}
+            description={t('dashboard.charts.revenue.emptyDesc')}
+          />
 
-          <Card>
-            <CardHeader>
-              <CardTitle>{t('dashboard.charts.reviews.title')}</CardTitle>
-              <CardDescription>{t('dashboard.charts.reviews.description')}</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="flex h-[200px] items-center justify-center rounded-lg border border-dashed">
-                <div className="flex flex-col items-center gap-1 text-center">
-                  <Users className="h-6 w-6 text-muted-foreground" />
-                  <p className="text-xs text-muted-foreground">{t('dashboard.charts.reviews.empty')}</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          <FeaturePlaceholder
+            icon={Calendar}
+            title={t('dashboard.charts.bookings.title')}
+            description={t('dashboard.charts.bookings.emptyDesc')}
+          />
         </div>
-      </div>
+      </PageContainer>
     </AdminLayout>
   )
 }

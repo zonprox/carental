@@ -27,25 +27,34 @@
   }
 
   .dark {
-    --background: 240 10% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 240 10% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 240 10% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 0 0% 98%;
-    --primary-foreground: 240 5.9% 10%;
-    --secondary: 240 3.7% 15.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
-    --accent: 240 3.7% 15.9%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 240 4.9% 83.9%;
+    /* Modern dark mode - Inspired by GitHub, Discord, Notion */
+    --background: 224 71% 4%;         /* #0d1117 - GitHub-like dark */
+    --foreground: 213 31% 91%;        /* #e6edf3 - Soft white */
+    
+    --card: 220 13% 9%;               /* #161b22 - Elevated surface */
+    --card-foreground: 213 31% 91%;   /* #e6edf3 - Soft white */
+    
+    --popover: 220 13% 9%;            /* #161b22 - Popover surface */
+    --popover-foreground: 213 31% 91%; /* #e6edf3 - Soft white */
+    
+    --primary: 213 94% 68%;           /* #58a6ff - GitHub blue */
+    --primary-foreground: 0 0% 100%;  /* #ffffff - Pure white */
+    
+    --secondary: 215 14% 14%;         /* #21262d - Secondary surface */
+    --secondary-foreground: 213 31% 91%; /* #e6edf3 - Soft white */
+    
+    --muted: 215 14% 14%;             /* #21262d - Muted surface */
+    --muted-foreground: 217 10% 64%;  /* #8b949e - Gray text */
+    
+    --accent: 215 14% 14%;            /* #21262d - Accent surface */
+    --accent-foreground: 213 31% 91%; /* #e6edf3 - Soft white */
+    
+    --destructive: 0 66% 54%;         /* #e5534b - Bright red */
+    --destructive-foreground: 0 0% 100%; /* #ffffff - White */
+    
+    --border: 215 14% 18%;            /* #30363d - Visible border */
+    --input: 215 14% 18%;             /* #30363d - Input border */
+    --ring: 213 94% 68%;              /* #58a6ff - Blue ring */
   }
 }
 
@@ -55,6 +64,21 @@
   }
   body {
     @apply bg-background text-foreground;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  
+  /* Smooth transitions for theme changes */
+  * {
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+  }
+  
+  /* Ensure images don't look washed out in dark mode */
+  .dark img {
+    opacity: 0.9;
+  }
+  
+  .dark img:hover {
+    opacity: 1;
   }
 }
 
@@ -109,4 +133,87 @@
 
 .btn-destructive {
   @apply bg-destructive text-destructive-foreground hover:bg-destructive/90 h-10 px-4 py-2 rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50;
+}
+
+/* Dark mode enhancements - Modern webapp style */
+.dark {
+  /* Enhanced shadow visibility with glow effect */
+  --shadow-color: 0deg 0% 0% / 0.4;
+}
+
+.dark .shadow-sm {
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.4), 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+}
+
+.dark .shadow-md {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+}
+
+.dark .shadow-lg {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.4);
+}
+
+.dark .shadow-xl {
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.4);
+}
+
+/* Cards get elevated appearance in dark mode */
+.dark .car-card:hover {
+  box-shadow: 0 8px 16px -4px rgba(88, 166, 255, 0.15), 0 4px 8px -2px rgba(0, 0, 0, 0.4);
+}
+
+/* Admin sidebar in dark mode */
+.dark .admin-sidebar {
+  @apply bg-card border-border;
+}
+
+/* Table headers in dark mode */
+.dark thead {
+  @apply bg-muted/50;
+}
+
+.dark tbody tr:hover {
+  @apply bg-muted/30;
+}
+
+/* Form inputs in dark mode */
+.dark input,
+.dark textarea,
+.dark select {
+  @apply bg-background border-input text-foreground;
+}
+
+.dark input:focus,
+.dark textarea:focus,
+.dark select:focus {
+  @apply ring-ring border-ring;
+}
+
+/* Scrollbar styling for dark mode */
+.dark ::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.dark ::-webkit-scrollbar-track {
+  background: hsl(var(--background));
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted));
+  border-radius: 5px;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground) / 0.5);
+}
+
+/* Links in dark mode */
+.dark a {
+  @apply text-primary hover:text-primary/80;
+}
+
+/* Code blocks in dark mode */
+.dark code {
+  @apply bg-muted text-foreground px-1 py-0.5 rounded;
 }

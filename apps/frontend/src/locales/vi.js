@@ -41,24 +41,34 @@ export const vi = {
     // Stats
     stats: {
       totalVehicles: {
-        title: 'Total Vehicles',
-        label: 'Tổng số xe'
+        title: 'Tổng số xe',
+        label: 'xe trong hệ thống',
+        description: 'Tổng số phương tiện'
       },
       available: {
-        title: 'Available',
-        label: 'Xe sẵn sàng'
+        title: 'Xe sẵn sàng',
+        label: 'xe có thể cho thuê',
+        description: 'Phương tiện khả dụng'
       },
       withDriver: {
-        title: 'With Driver',
-        label: 'Có tài xế'
+        title: 'Có tài xế',
+        label: 'xe có người lái',
+        description: 'Dịch vụ có tài xế'
       },
       bookings: {
-        title: 'Bookings',
-        label: 'Lượt thuê'
+        title: 'Lượt thuê',
+        label: 'đơn đặt xe',
+        description: 'Tổng số đặt xe'
       },
       totalValue: {
-        title: 'Total Value',
-        label: 'Tổng giá trị'
+        title: 'Tổng giá trị',
+        label: 'giá trị tài sản',
+        description: 'Tổng giá trị xe'
+      },
+      revenue: {
+        title: 'Doanh thu',
+        label: 'trong tháng này',
+        description: 'Thu nhập tháng hiện tại'
       },
       deltaText: 'so với tháng trước'
     },
@@ -68,36 +78,50 @@ export const vi = {
       overview: {
         title: 'Biểu đồ tổng quan',
         description: 'Thống kê hoạt động theo thời gian',
-        placeholder: 'Chart Placeholder',
+        placeholder: 'Biểu đồ đang được phát triển',
         placeholderDesc: 'Biểu đồ sẽ được hiển thị tại đây'
       },
       activity: {
         title: 'Hoạt động gần đây',
         description: 'Các hoạt động mới nhất trong hệ thống',
-        empty: 'No Activity',
+        empty: 'Chưa có hoạt động',
         emptyDesc: 'Chưa có hoạt động nào được ghi nhận'
       },
       popular: {
         title: 'Xe phổ biến',
         description: 'Top xe được thuê nhiều nhất',
-        empty: 'Chưa có dữ liệu'
+        empty: 'Chưa có dữ liệu',
+        emptyDesc: 'Danh sách xe phổ biến sẽ xuất hiện ở đây'
       },
       revenue: {
-        title: 'Doanh thu',
-        description: 'Thống kê doanh thu tháng này',
-        empty: 'Chưa có dữ liệu'
+        title: 'Doanh thu theo tháng',
+        description: 'Thống kê doanh thu và xu hướng',
+        empty: 'Chưa có dữ liệu',
+        emptyDesc: 'Biểu đồ doanh thu sẽ được hiển thị ở đây'
       },
-      reviews: {
-        title: 'Đánh giá',
-        description: 'Phản hồi từ khách hàng',
-        empty: 'Chưa có đánh giá'
+      bookings: {
+        title: 'Đặt xe gần đây',
+        description: 'Danh sách đơn đặt xe mới nhất',
+        empty: 'Chưa có đơn đặt xe',
+        emptyDesc: 'Đơn đặt xe sẽ xuất hiện ở đây'
       }
+    },
+
+    // Placeholders
+    placeholders: {
+      chart: 'Biểu đồ sẽ được thêm vào đây',
+      table: 'Bảng dữ liệu sẽ hiển thị tại đây',
+      feature: 'Tính năng đang được phát triển',
+      comingSoon: 'Sắp ra mắt'
     }
   },
 
   // User Menu
   userMenu: {
-    account: 'Tài khoản',
+    profile: 'Hồ sơ cá nhân',
+    settings: 'Cài đặt',
+    notifications: 'Thông báo',
+    support: 'Hỗ trợ',
     appearance: 'Giao diện',
     logout: 'Đăng xuất',
 

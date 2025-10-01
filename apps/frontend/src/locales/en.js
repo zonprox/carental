@@ -97,7 +97,10 @@ export const en = {
 
   // User Menu
   userMenu: {
-    account: 'Account',
+    profile: 'Profile',
+    settings: 'Settings',
+    notifications: 'Notifications',
+    support: 'Support',
     appearance: 'Appearance',
     logout: 'Logout',
 

@@ -3,8 +3,10 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import { PageContainer, PageHeader } from '@/components/ui/page-header'
 import { Plus, Edit, Trash2, Save, X, Car as CarIcon } from 'lucide-react'
 import AdminLayout from '@/components/admin/AdminLayout'
+import { t } from '@/locales'
 import {
   Dialog,
   DialogContent,
@@ -164,18 +166,16 @@ export default function CarManagement() {
 
   return (
     <AdminLayout>
-      <div className="p-6 lg:p-8 space-y-6">
-        {/* Header */}
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">Quản lý xe</h1>
-            <p className="text-gray-500 mt-1">Quản lý danh sách xe cho thuê</p>
-          </div>
+      <PageContainer>
+        <PageHeader 
+          title={t('cars.title')}
+          description={t('cars.subtitle')}
+        >
           <Button onClick={handleAdd}>
             <Plus className="h-4 w-4 mr-2" />
-            Thêm xe mới
+            {t('cars.addNew')}
           </Button>
-        </div>
+        </PageHeader>
 
         {/* Table */}
         <Card>
@@ -183,14 +183,14 @@ export default function CarManagement() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Tên xe</TableHead>
-                  <TableHead>Hãng</TableHead>
-                  <TableHead>Năm</TableHead>
-                  <TableHead>Chỗ ngồi</TableHead>
-                  <TableHead>Nhiên liệu</TableHead>
-                  <TableHead>Địa điểm</TableHead>
-                  <TableHead className="text-right">Giá/ngày</TableHead>
-                  <TableHead className="text-right">Thao tác</TableHead>
+                  <TableHead className="text-foreground">{t('cars.table.name')}</TableHead>
+                  <TableHead className="text-foreground">{t('cars.table.brand')}</TableHead>
+                  <TableHead className="text-foreground">{t('cars.table.year')}</TableHead>
+                  <TableHead className="text-foreground">{t('cars.table.seats')}</TableHead>
+                  <TableHead className="text-foreground">{t('cars.table.fuel')}</TableHead>
+                  <TableHead className="text-foreground">{t('cars.table.location')}</TableHead>
+                  <TableHead className="text-right text-foreground">{t('cars.table.price')}</TableHead>
+                  <TableHead className="text-right text-foreground">{t('cars.table.actions')}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -346,7 +346,7 @@ export default function CarManagement() {
             </form>
           </DialogContent>
         </Dialog>
-      </div>
+      </PageContainer>
     </AdminLayout>
   )
 }

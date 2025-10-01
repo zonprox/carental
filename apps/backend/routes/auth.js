@@ -25,7 +25,7 @@ router.post('/login', [
 
     // Find user by email
     const userResult = await pool.query(
-      'SELECT id, email, password, role FROM users WHERE email = $1',
+      'SELECT id, name, email, password, role FROM users WHERE email = $1',
       [email]
     );
 
@@ -65,6 +65,7 @@ router.post('/login', [
       token,
       user: {
         id: user.id,
+        name: user.name || user.username || 'User',
         email: user.email,
         role: user.role
       }
@@ -89,7 +90,7 @@ router.get('/verify', async (req, res) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key');
     
     // Verify user still exists
-    const user = await pool.query('SELECT id, email, role FROM users WHERE id = $1', [decoded.userId]);
+    const user = await pool.query('SELECT id, name, email, role FROM users WHERE id = $1', [decoded.userId]);
     
     if (user.rows.length === 0) {
       return res.status(401).json({ message: 'User not found' });
@@ -97,7 +98,10 @@ router.get('/verify', async (req, res) => {
 
     res.json({
       valid: true,
-      user: user.rows[0]
+      user: {
+        ...user.rows[0],
+        name: user.rows[0].name || user.rows[0].username || 'User'
+      }
     });
   } catch (error) {
     res.status(401).json({ 

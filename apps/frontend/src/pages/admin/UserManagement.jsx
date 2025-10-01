@@ -4,8 +4,10 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Badge } from '@/components/ui/badge'
+import { PageContainer, PageHeader } from '@/components/ui/page-header'
 import { Plus, Edit, Trash2, Save, X, Users as UsersIcon, Shield, User } from 'lucide-react'
 import AdminLayout from '@/components/admin/AdminLayout'
+import { t } from '@/locales'
 import {
   Dialog,
   DialogContent,
@@ -135,18 +137,16 @@ export default function UserManagement() {
 
   return (
     <AdminLayout>
-      <div className="p-6 lg:p-8 space-y-6">
-        {/* Header */}
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">Quản lý người dùng</h1>
-            <p className="text-gray-500 mt-1">Quản lý tài khoản người dùng và phân quyền</p>
-          </div>
+      <PageContainer>
+        <PageHeader 
+          title={t('users.title')}
+          description={t('users.subtitle')}
+        >
           <Button onClick={handleAdd}>
             <Plus className="h-4 w-4 mr-2" />
-            Thêm người dùng
+            {t('users.addNew')}
           </Button>
-        </div>
+        </PageHeader>
 
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -154,10 +154,10 @@ export default function UserManagement() {
             <CardContent className="pt-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">Tổng người dùng</p>
-                  <p className="text-2xl font-bold mt-1">{users.length}</p>
+                  <p className="text-sm font-medium text-muted-foreground">{t('users.stats.total')}</p>
+                  <p className="text-2xl font-bold mt-1 text-foreground">{users.length}</p>
                 </div>
-                <UsersIcon className="h-8 w-8 text-blue-600" />
+                <UsersIcon className="h-8 w-8 text-primary" />
               </div>
             </CardContent>
           </Card>
@@ -165,12 +165,12 @@ export default function UserManagement() {
             <CardContent className="pt-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">Quản trị viên</p>
-                  <p className="text-2xl font-bold mt-1">
+                  <p className="text-sm font-medium text-muted-foreground">{t('users.stats.admins')}</p>
+                  <p className="text-2xl font-bold mt-1 text-foreground">
                     {users.filter(u => u.role === 'admin').length}
                   </p>
                 </div>
-                <Shield className="h-8 w-8 text-purple-600" />
+                <Shield className="h-8 w-8 text-primary" />
               </div>
             </CardContent>
           </Card>
@@ -178,12 +178,12 @@ export default function UserManagement() {
             <CardContent className="pt-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">Người dùng thường</p>
-                  <p className="text-2xl font-bold mt-1">
+                  <p className="text-sm font-medium text-muted-foreground">{t('users.stats.users')}</p>
+                  <p className="text-2xl font-bold mt-1 text-foreground">
                     {users.filter(u => u.role === 'user').length}
                   </p>
                 </div>
-                <User className="h-8 w-8 text-green-600" />
+                <User className="h-8 w-8 text-primary" />
               </div>
             </CardContent>
           </Card>
@@ -195,20 +195,20 @@ export default function UserManagement() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Họ tên</TableHead>
-                  <TableHead>Email</TableHead>
-                  <TableHead>Số điện thoại</TableHead>
-                  <TableHead>Địa chỉ</TableHead>
-                  <TableHead>Vai trò</TableHead>
-                  <TableHead>Ngày tạo</TableHead>
-                  <TableHead className="text-right">Thao tác</TableHead>
+                  <TableHead className="text-foreground">{t('users.table.name')}</TableHead>
+                  <TableHead className="text-foreground">{t('users.table.email')}</TableHead>
+                  <TableHead className="text-foreground">{t('users.table.phone')}</TableHead>
+                  <TableHead className="text-foreground">{t('users.table.address')}</TableHead>
+                  <TableHead className="text-foreground">{t('users.table.role')}</TableHead>
+                  <TableHead className="text-foreground">{t('users.table.createdAt')}</TableHead>
+                  <TableHead className="text-right text-foreground">{t('users.table.actions')}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {users.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={7} className="text-center py-12 text-gray-500">
-                      Chưa có người dùng nào trong hệ thống
+                    <TableCell colSpan={7} className="text-center py-12 text-muted-foreground">
+                      {t('users.empty')}
                     </TableCell>
                   </TableRow>
                 ) : (
@@ -346,7 +346,7 @@ export default function UserManagement() {
             </form>
           </DialogContent>
         </Dialog>
-      </div>
+      </PageContainer>
     </AdminLayout>
   )
 }

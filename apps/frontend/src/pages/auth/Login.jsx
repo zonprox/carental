@@ -51,13 +51,13 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-indigo-50 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-indigo-50 dark:from-background dark:via-background dark:to-background p-4">
       <div className="w-full max-w-md">
         {/* Logo và Back */}
         <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center gap-2 text-blue-600">
+          <div className="flex items-center gap-2 text-primary">
             <Car className="h-8 w-8" />
-            <span className="text-2xl font-bold">CarRental</span>
+            <span className="text-2xl font-bold text-foreground">CarRental</span>
           </div>
           <Button
             variant="ghost"
@@ -71,7 +71,7 @@ export default function Login() {
         </div>
 
         {/* Card đăng nhập */}
-        <Card className="shadow-xl">
+        <Card className="shadow-xl border-border">
           <CardHeader className="space-y-1">
             <CardTitle className="text-2xl font-bold text-center">
               {t('auth.login.title')}

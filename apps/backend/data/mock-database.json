@@ -3,6 +3,7 @@
     {
       "id": 1,
       "username": "admin",
+      "name": "Quản Trị Viên",
       "email": "admin@carental.com",
       "password": "admin123",
       "role": "admin",

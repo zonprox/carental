@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { 
   DropdownMenu,
   DropdownMenuContent,
@@ -15,6 +14,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
+import { useTheme } from '@/components/ThemeProvider'
 import { 
   User, 
   LogOut, 
@@ -22,12 +22,15 @@ import {
   Sun,
   Moon,
   Monitor,
-  ChevronsUpDown
+  ChevronsUpDown,
+  Settings,
+  Bell,
+  LifeBuoy,
 } from 'lucide-react'
 import { t } from '@/locales'
 
 export default function UserMenu({ user, onLogout }) {
-  const [theme, setTheme] = useState('system')
+  const { theme, setTheme } = useTheme()
 
   // User data with fallbacks
   const userData = {
@@ -47,8 +50,6 @@ export default function UserMenu({ user, onLogout }) {
 
   const handleThemeChange = (newTheme) => {
     setTheme(newTheme)
-    // TODO: Implement actual theme switching logic
-    console.log('Theme changed to:', newTheme)
   }
 
   // Loading skeleton
@@ -70,16 +71,16 @@ export default function UserMenu({ user, onLogout }) {
       <DropdownMenuTrigger asChild>
         <Button 
           variant="ghost" 
-          className="w-full justify-start gap-2 px-2 h-auto py-2 rounded-lg hover:bg-accent data-[state=open]:bg-accent"
+          className="w-full justify-start gap-2 px-2 h-auto py-2 rounded-full hover:bg-accent data-[state=open]:bg-accent transition-colors ring-2 ring-primary/10 hover:ring-primary/20"
         >
-          <Avatar className="h-8 w-8 rounded-lg">
+          <Avatar className="h-8 w-8">
             <AvatarImage src={userData.avatar} alt={userData.name} />
-            <AvatarFallback className="rounded-lg bg-primary text-primary-foreground">
+            <AvatarFallback className="bg-primary/10 text-primary font-semibold text-sm">
               {userData.initials}
             </AvatarFallback>
           </Avatar>
           <div className="grid flex-1 text-left text-sm leading-tight">
-            <span className="truncate font-medium">{userData.name}</span>
+            <span className="truncate font-semibold text-foreground">{userData.name}</span>
             <span className="truncate text-xs text-muted-foreground">{userData.email}</span>
           </div>
           <ChevronsUpDown className="ml-auto h-4 w-4 text-muted-foreground" />
@@ -87,21 +88,22 @@ export default function UserMenu({ user, onLogout }) {
       </DropdownMenuTrigger>
       
       <DropdownMenuContent 
-        className="w-56 rounded-lg" 
+        className="w-64 rounded-lg shadow-lg" 
         side="right"
         align="end" 
-        sideOffset={4}
+        sideOffset={8}
       >
+        {/* User Info Header */}
         <DropdownMenuLabel className="p-0 font-normal">
-          <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-            <Avatar className="h-8 w-8 rounded-lg">
+          <div className="flex items-center gap-3 px-2 py-3 text-left">
+            <Avatar className="h-10 w-10 ring-2 ring-border">
               <AvatarImage src={userData.avatar} alt={userData.name} />
-              <AvatarFallback className="rounded-lg bg-primary text-primary-foreground">
+              <AvatarFallback className="bg-primary/10 text-primary font-semibold text-base">
                 {userData.initials}
               </AvatarFallback>
             </Avatar>
-            <div className="grid flex-1 text-left text-sm leading-tight">
-              <span className="truncate font-medium">{userData.name}</span>
+            <div className="grid flex-1 text-left leading-tight">
+              <span className="truncate font-semibold text-sm text-foreground">{userData.name}</span>
               <span className="truncate text-xs text-muted-foreground">{userData.email}</span>
             </div>
           </div>
@@ -109,30 +111,44 @@ export default function UserMenu({ user, onLogout }) {
         
         <DropdownMenuSeparator />
         
+        {/* Account Section */}
         <DropdownMenuGroup>
           <DropdownMenuItem className="cursor-pointer">
-            <User />
-            {t('userMenu.account')}
+            <User className="mr-2 h-4 w-4" />
+            <span>{t('userMenu.profile')}</span>
           </DropdownMenuItem>
-          
+          <DropdownMenuItem className="cursor-pointer">
+            <Settings className="mr-2 h-4 w-4" />
+            <span>{t('userMenu.settings')}</span>
+          </DropdownMenuItem>
+          <DropdownMenuItem className="cursor-pointer">
+            <Bell className="mr-2 h-4 w-4" />
+            <span>{t('userMenu.notifications')}</span>
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
+        
+        <DropdownMenuSeparator />
+        
+        {/* Appearance Theme */}
+        <DropdownMenuGroup>
           <DropdownMenuSub>
             <DropdownMenuSubTrigger className="cursor-pointer">
-              <Palette />
-              {t('userMenu.appearance')}
+              <Palette className="mr-2 h-4 w-4" />
+              <span>{t('userMenu.appearance')}</span>
             </DropdownMenuSubTrigger>
-            <DropdownMenuSubContent className="rounded-lg">
+            <DropdownMenuSubContent className="rounded-lg w-48">
               <DropdownMenuRadioGroup value={theme} onValueChange={handleThemeChange}>
                 <DropdownMenuRadioItem value="light" className="cursor-pointer">
-                  <Sun />
-                  {t('userMenu.theme.light')}
+                  <Sun className="mr-2 h-4 w-4" />
+                  <span>{t('userMenu.theme.light')}</span>
                 </DropdownMenuRadioItem>
                 <DropdownMenuRadioItem value="dark" className="cursor-pointer">
-                  <Moon />
-                  {t('userMenu.theme.dark')}
+                  <Moon className="mr-2 h-4 w-4" />
+                  <span>{t('userMenu.theme.dark')}</span>
                 </DropdownMenuRadioItem>
                 <DropdownMenuRadioItem value="system" className="cursor-pointer">
-                  <Monitor />
-                  {t('userMenu.theme.system')}
+                  <Monitor className="mr-2 h-4 w-4" />
+                  <span>{t('userMenu.theme.system')}</span>
                 </DropdownMenuRadioItem>
               </DropdownMenuRadioGroup>
             </DropdownMenuSubContent>
@@ -141,12 +157,23 @@ export default function UserMenu({ user, onLogout }) {
         
         <DropdownMenuSeparator />
         
+        {/* Support Section */}
+        <DropdownMenuGroup>
+          <DropdownMenuItem className="cursor-pointer">
+            <LifeBuoy className="mr-2 h-4 w-4" />
+            <span>{t('userMenu.support')}</span>
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
+        
+        <DropdownMenuSeparator />
+        
+        {/* Logout */}
         <DropdownMenuItem 
-          className="cursor-pointer text-red-600 focus:text-red-600 focus:bg-red-50"
+          className="cursor-pointer text-red-600 focus:text-red-600 focus:bg-red-50 dark:focus:bg-red-950"
           onClick={handleLogout}
         >
-          <LogOut />
-          {t('userMenu.logout')}
+          <LogOut className="mr-2 h-4 w-4" />
+          <span>{t('userMenu.logout')}</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
