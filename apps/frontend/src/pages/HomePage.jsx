@@ -41,16 +41,21 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
       {/* Header */}
-      <header className="bg-white shadow-sm">
+      <header className="bg-white shadow-sm sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
               <Car className="h-8 w-8 text-blue-600" />
               <h1 className="text-2xl font-bold text-gray-900">CarRental</h1>
             </div>
-            <Button variant="outline" asChild>
-              <a href="/login">Quản trị</a>
-            </Button>
+            <div className="flex items-center gap-3">
+              <Button variant="outline" asChild>
+                <a href="/user/login">Đăng nhập</a>
+              </Button>
+              <Button asChild>
+                <a href="/user/login">Thuê xe ngay</a>
+              </Button>
+            </div>
           </div>
         </div>
       </header>
@@ -135,7 +140,7 @@ export default function HomePage() {
       <footer className="bg-white border-t mt-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="text-center text-gray-600">
-            <p>&copy; 2024 CarRental. Tất cả quyền được bảo lưu.</p>
+            <p>&copy; {new Date().getFullYear()} CarRental. Tất cả quyền được bảo lưu.</p>
           </div>
         </div>
       </footer>

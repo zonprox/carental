@@ -3,9 +3,9 @@ import { useNavigate } from 'react-router-dom'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Car, Lock, Mail } from 'lucide-react'
+import { Car, Lock, Mail, UserCircle } from 'lucide-react'
 
-export default function AdminLogin() {
+export default function UserLogin() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
@@ -30,7 +30,13 @@ export default function AdminLogin() {
 
       if (response.ok) {
         localStorage.setItem('token', data.token)
-        navigate('/admin/dashboard')
+        localStorage.setItem('user', JSON.stringify(data.user))
+        // Redirect based on user role
+        if (data.user.role === 'admin') {
+          navigate('/admin/dashboard')
+        } else {
+          navigate('/dashboard')
+        }
       } else {
         setError(data.message || 'Đăng nhập thất bại')
       }
@@ -50,14 +56,17 @@ export default function AdminLogin() {
             <Car className="h-10 w-10 text-blue-600" />
             <h1 className="text-3xl font-bold text-gray-900">CarRental</h1>
           </div>
-          <p className="text-gray-600">Hệ thống quản lý thuê xe</p>
+          <p className="text-gray-600">Hệ thống thuê xe tự lái</p>
         </div>
 
         <Card>
           <CardHeader>
-            <CardTitle className="text-2xl text-center">Đăng nhập quản trị</CardTitle>
+            <div className="flex justify-center mb-4">
+              <UserCircle className="h-16 w-16 text-blue-600" />
+            </div>
+            <CardTitle className="text-2xl text-center">Đăng nhập</CardTitle>
             <CardDescription className="text-center">
-              Vui lòng nhập thông tin tài khoản để truy cập
+              Vui lòng nhập thông tin tài khoản để tiếp tục
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -68,7 +77,7 @@ export default function AdminLogin() {
                   <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                   <Input
                     type="email"
-                    placeholder="admin@carental.com"
+                    placeholder="email@example.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className="pl-10"
@@ -103,14 +112,38 @@ export default function AdminLogin() {
               </Button>
             </form>
 
-            <div className="mt-6 text-center border-t pt-6">
-              <Button variant="ghost" asChild>
-                <a href="/">← Quay về trang chủ</a>
-              </Button>
+            <div className="mt-6 space-y-4">
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                  <span className="w-full border-t" />
+                </div>
+                <div className="relative flex justify-center text-xs uppercase">
+                  <span className="bg-white px-2 text-gray-500">Hoặc</span>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <Button variant="outline" asChild className="w-full">
+                  <a href="/">Trang chủ</a>
+                </Button>
+                <Button variant="outline" asChild className="w-full">
+                  <a href="/register">Đăng ký</a>
+                </Button>
+              </div>
             </div>
           </CardContent>
         </Card>
+
+        <div className="mt-6 text-center">
+          <p className="text-sm text-gray-600">
+            Bạn là quản trị viên?{' '}
+            <a href="/login" className="text-blue-600 hover:underline font-medium">
+              Đăng nhập quản trị
+            </a>
+          </p>
+        </div>
       </div>
     </div>
   )
 }
+
