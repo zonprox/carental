@@ -23,19 +23,19 @@ import {
   Moon,
   Monitor
 } from 'lucide-react'
-import { messages } from '@/lib/messages'
+import { t } from '@/locales'
 
 export default function UserMenu({ user, onLogout }) {
   const [theme, setTheme] = useState('system')
 
   // User data with fallbacks
   const userData = {
-    name: user?.name || messages.userMenu.fallback.name,
-    email: user?.email || messages.userMenu.fallback.email,
+    name: user?.name || t('userMenu.fallback.name'),
+    email: user?.email || t('userMenu.fallback.email'),
     avatar: user?.avatar || null,
     initials: user?.name 
       ? user.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
-      : messages.userMenu.fallback.initials
+      : t('userMenu.fallback.initials')
   }
 
   const handleLogout = () => {
@@ -117,27 +117,27 @@ export default function UserMenu({ user, onLogout }) {
         
         <DropdownMenuItem className="cursor-pointer">
           <User className="mr-2 h-4 w-4" />
-          <span>{messages.userMenu.account}</span>
+          <span>{t('userMenu.account')}</span>
         </DropdownMenuItem>
         
         <DropdownMenuSub>
           <DropdownMenuSubTrigger className="cursor-pointer">
             <Palette className="mr-2 h-4 w-4" />
-            <span>{messages.userMenu.appearance}</span>
+            <span>{t('userMenu.appearance')}</span>
           </DropdownMenuSubTrigger>
           <DropdownMenuSubContent>
             <DropdownMenuRadioGroup value={theme} onValueChange={handleThemeChange}>
               <DropdownMenuRadioItem value="light" className="cursor-pointer">
                 <Sun className="mr-2 h-4 w-4" />
-                <span>{messages.userMenu.theme.light}</span>
+                <span>{t('userMenu.theme.light')}</span>
               </DropdownMenuRadioItem>
               <DropdownMenuRadioItem value="dark" className="cursor-pointer">
                 <Moon className="mr-2 h-4 w-4" />
-                <span>{messages.userMenu.theme.dark}</span>
+                <span>{t('userMenu.theme.dark')}</span>
               </DropdownMenuRadioItem>
               <DropdownMenuRadioItem value="system" className="cursor-pointer">
                 <Monitor className="mr-2 h-4 w-4" />
-                <span>{messages.userMenu.theme.system}</span>
+                <span>{t('userMenu.theme.system')}</span>
               </DropdownMenuRadioItem>
             </DropdownMenuRadioGroup>
           </DropdownMenuSubContent>
@@ -150,7 +150,7 @@ export default function UserMenu({ user, onLogout }) {
           onClick={handleLogout}
         >
           <LogOut className="mr-2 h-4 w-4" />
-          <span>{messages.userMenu.logout}</span>
+          <span>{t('userMenu.logout')}</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

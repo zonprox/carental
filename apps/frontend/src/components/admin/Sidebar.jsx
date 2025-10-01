@@ -3,12 +3,13 @@ import { Car, Users, LayoutDashboard, Menu, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useState } from 'react'
 import { cn } from '@/lib/utils'
+import { t } from '@/locales'
 import UserMenu from './UserMenu'
 
 const navigation = [
-  { name: 'Dashboard', href: '/admin/dashboard', icon: LayoutDashboard },
-  { name: 'Quản lý xe', href: '/admin/cars', icon: Car },
-  { name: 'Quản lý người dùng', href: '/admin/users', icon: Users },
+  { name: t('nav.dashboard'), href: '/admin/dashboard', icon: LayoutDashboard },
+  { name: t('nav.vehicles'), href: '/admin/cars', icon: Car },
+  { name: t('nav.users'), href: '/admin/users', icon: Users },
 ]
 
 export default function Sidebar({ onLogout }) {
@@ -35,7 +36,7 @@ export default function Sidebar({ onLogout }) {
       {/* Sidebar */}
       <div
         className={cn(
-          "fixed inset-y-0 left-0 z-40 w-64 bg-white border-r transform transition-transform duration-200 ease-in-out lg:translate-x-0 lg:static lg:inset-auto",
+          "fixed inset-y-0 left-0 z-40 w-64 bg-white border-r transform transition-transform duration-200 ease-in-out lg:translate-x-0 lg:static lg:inset-auto lg:h-screen",
           isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
         )}
       >
@@ -74,30 +75,15 @@ export default function Sidebar({ onLogout }) {
           </nav>
 
           {/* Footer */}
-          <div className="border-t px-3 py-3">
-            <div className="space-y-2">
-              <Button
-                variant="ghost"
-                className="w-full justify-start text-sm h-8"
-                asChild
-              >
-                <a href="/" target="_blank" rel="noopener noreferrer">
-                  Xem trang chủ
-                </a>
-              </Button>
-              
-              {/* User Menu */}
-              <div className="pt-1">
-                <UserMenu 
-                  user={{
-                    name: 'Admin User',
-                    email: 'admin@carental.com',
-                    avatar: null
-                  }}
-                  onLogout={onLogout}
-                />
-              </div>
-            </div>
+          <div className="border-t px-3 py-4">
+            <UserMenu 
+              user={{
+                name: 'Admin User',
+                email: 'admin@carental.com',
+                avatar: null
+              }}
+              onLogout={onLogout}
+            />
           </div>
         </div>
       </div>

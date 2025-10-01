@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import { Car, Users, DollarSign, TrendingUp, RefreshCw, Download, ArrowUpRight, UserCheck } from 'lucide-react'
 import AdminLayout from '@/components/admin/AdminLayout'
-import { messages } from '@/lib/messages'
+import { t } from '@/locales'
 
 const USE_MOCK_UI = false
 
@@ -64,40 +64,40 @@ export default function Dashboard() {
 
   const statCards = [
     {
-      title: messages.dashboard.stats.totalVehicles.title,
-      label: messages.dashboard.stats.totalVehicles.label,
+      title: t('dashboard.stats.totalVehicles.title'),
+      label: t('dashboard.stats.totalVehicles.label'),
       value: stats.totalCars,
       delta: stats.totalCars > 0 ? '+12%' : '0%',
       deltaType: 'increase',
       icon: Car
     },
     {
-      title: messages.dashboard.stats.available.title,
-      label: messages.dashboard.stats.available.label,
+      title: t('dashboard.stats.available.title'),
+      label: t('dashboard.stats.available.label'),
       value: stats.availableCars,
       delta: stats.availableCars > 0 ? '+8%' : '0%',
       deltaType: 'increase',
       icon: Car
     },
     {
-      title: messages.dashboard.stats.withDriver.title,
-      label: messages.dashboard.stats.withDriver.label,
+      title: t('dashboard.stats.withDriver.title'),
+      label: t('dashboard.stats.withDriver.label'),
       value: stats.carsWithDriver,
       delta: '0%',
       deltaType: 'neutral',
       icon: UserCheck
     },
     {
-      title: messages.dashboard.stats.bookings.title,
-      label: messages.dashboard.stats.bookings.label,
+      title: t('dashboard.stats.bookings.title'),
+      label: t('dashboard.stats.bookings.label'),
       value: stats.totalBookings,
       delta: '0%',
       deltaType: 'neutral',
       icon: TrendingUp
     },
     {
-      title: messages.dashboard.stats.totalValue.title,
-      label: messages.dashboard.stats.totalValue.label,
+      title: t('dashboard.stats.totalValue.title'),
+      label: t('dashboard.stats.totalValue.label'),
       value: `${stats.revenue.toLocaleString('vi-VN')}đ`,
       delta: stats.revenue > 0 ? '+5%' : '0%',
       deltaType: 'increase',
@@ -111,7 +111,7 @@ export default function Dashboard() {
         <div className="flex h-[450px] items-center justify-center rounded-lg border border-dashed">
           <div className="flex flex-col items-center gap-2 text-center">
             <RefreshCw className="h-8 w-8 animate-spin text-muted-foreground" />
-            <p className="text-sm text-muted-foreground">{messages.dashboard.loading}</p>
+            <p className="text-sm text-muted-foreground">{t('dashboard.loading')}</p>
           </div>
         </div>
       </AdminLayout>
@@ -124,9 +124,9 @@ export default function Dashboard() {
         {/* App Header */}
         <div className="flex items-center justify-between space-y-2">
           <div>
-            <h2 className="text-3xl font-bold tracking-tight">{messages.dashboard.title}</h2>
+            <h2 className="text-3xl font-bold tracking-tight">{t('dashboard.title')}</h2>
             <p className="text-muted-foreground">
-              {messages.dashboard.subtitle}
+              {t('dashboard.subtitle')}
             </p>
           </div>
           <div className="flex items-center gap-2">
@@ -137,7 +137,7 @@ export default function Dashboard() {
               disabled={loading}
             >
               <RefreshCw className="mr-2 h-4 w-4" />
-              {messages.dashboard.refresh}
+              {t('common.refresh')}
             </Button>
             <Button
               variant="outline"
@@ -145,7 +145,7 @@ export default function Dashboard() {
               onClick={handleExport}
             >
               <Download className="mr-2 h-4 w-4" />
-              {messages.dashboard.export}
+              {t('common.export')}
             </Button>
           </div>
         </div>
@@ -174,7 +174,7 @@ export default function Dashboard() {
                       'text-muted-foreground'
                     }`}>
                       <ArrowUpRight className="mr-1 h-3 w-3" />
-                      {stat.delta} {messages.dashboard.stats.deltaText}
+                      {stat.delta} {t('dashboard.stats.deltaText')}
                     </div>
                   )}
                 </CardContent>
@@ -187,18 +187,18 @@ export default function Dashboard() {
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
           <Card className="col-span-4">
             <CardHeader>
-              <CardTitle>{messages.dashboard.charts.overview.title}</CardTitle>
+              <CardTitle>{t('dashboard.charts.overview.title')}</CardTitle>
               <CardDescription>
-                {messages.dashboard.charts.overview.description}
+                {t('dashboard.charts.overview.description')}
               </CardDescription>
             </CardHeader>
             <CardContent className="pl-2">
               <div className="flex h-[300px] items-center justify-center rounded-lg border border-dashed">
                 <div className="flex flex-col items-center gap-1 text-center">
                   <TrendingUp className="h-8 w-8 text-muted-foreground" />
-                  <h3 className="text-sm font-medium">{messages.dashboard.charts.overview.placeholder}</h3>
+                  <h3 className="text-sm font-medium">{t('dashboard.charts.overview.placeholder')}</h3>
                   <p className="text-xs text-muted-foreground max-w-[200px]">
-                    {messages.dashboard.charts.overview.placeholderDesc}
+                    {t('dashboard.charts.overview.placeholderDesc')}
                   </p>
                 </div>
               </div>
@@ -207,18 +207,18 @@ export default function Dashboard() {
 
           <Card className="col-span-3">
             <CardHeader>
-              <CardTitle>{messages.dashboard.charts.activity.title}</CardTitle>
+              <CardTitle>{t('dashboard.charts.activity.title')}</CardTitle>
               <CardDescription>
-                {messages.dashboard.charts.activity.description}
+                {t('dashboard.charts.activity.description')}
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="flex h-[300px] items-center justify-center rounded-lg border border-dashed">
                 <div className="flex flex-col items-center gap-1 text-center">
                   <Users className="h-8 w-8 text-muted-foreground" />
-                  <h3 className="text-sm font-medium">{messages.dashboard.charts.activity.empty}</h3>
+                  <h3 className="text-sm font-medium">{t('dashboard.charts.activity.empty')}</h3>
                   <p className="text-xs text-muted-foreground max-w-[200px]">
-                    {messages.dashboard.charts.activity.emptyDesc}
+                    {t('dashboard.charts.activity.emptyDesc')}
                   </p>
                 </div>
               </div>
@@ -230,14 +230,14 @@ export default function Dashboard() {
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           <Card>
             <CardHeader>
-              <CardTitle>{messages.dashboard.charts.popular.title}</CardTitle>
-              <CardDescription>{messages.dashboard.charts.popular.description}</CardDescription>
+              <CardTitle>{t('dashboard.charts.popular.title')}</CardTitle>
+              <CardDescription>{t('dashboard.charts.popular.description')}</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="flex h-[200px] items-center justify-center rounded-lg border border-dashed">
                 <div className="flex flex-col items-center gap-1 text-center">
                   <Car className="h-6 w-6 text-muted-foreground" />
-                  <p className="text-xs text-muted-foreground">{messages.dashboard.charts.popular.empty}</p>
+                  <p className="text-xs text-muted-foreground">{t('dashboard.charts.popular.empty')}</p>
                 </div>
               </div>
             </CardContent>
@@ -245,14 +245,14 @@ export default function Dashboard() {
 
           <Card>
             <CardHeader>
-              <CardTitle>{messages.dashboard.charts.revenue.title}</CardTitle>
-              <CardDescription>{messages.dashboard.charts.revenue.description}</CardDescription>
+              <CardTitle>{t('dashboard.charts.revenue.title')}</CardTitle>
+              <CardDescription>{t('dashboard.charts.revenue.description')}</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="flex h-[200px] items-center justify-center rounded-lg border border-dashed">
                 <div className="flex flex-col items-center gap-1 text-center">
                   <DollarSign className="h-6 w-6 text-muted-foreground" />
-                  <p className="text-xs text-muted-foreground">{messages.dashboard.charts.revenue.empty}</p>
+                  <p className="text-xs text-muted-foreground">{t('dashboard.charts.revenue.empty')}</p>
                 </div>
               </div>
             </CardContent>
@@ -260,14 +260,14 @@ export default function Dashboard() {
 
           <Card>
             <CardHeader>
-              <CardTitle>{messages.dashboard.charts.reviews.title}</CardTitle>
-              <CardDescription>{messages.dashboard.charts.reviews.description}</CardDescription>
+              <CardTitle>{t('dashboard.charts.reviews.title')}</CardTitle>
+              <CardDescription>{t('dashboard.charts.reviews.description')}</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="flex h-[200px] items-center justify-center rounded-lg border border-dashed">
                 <div className="flex flex-col items-center gap-1 text-center">
                   <Users className="h-6 w-6 text-muted-foreground" />
-                  <p className="text-xs text-muted-foreground">{messages.dashboard.charts.reviews.empty}</p>
+                  <p className="text-xs text-muted-foreground">{t('dashboard.charts.reviews.empty')}</p>
                 </div>
               </div>
             </CardContent>
