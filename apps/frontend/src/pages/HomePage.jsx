@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo, useCallback } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Car, MapPin, Users, Fuel } from 'lucide-react'
+import { t } from '@/locales'
 
 export default function HomePage() {
   const [cars, setCars] = useState([])
@@ -50,10 +51,10 @@ export default function HomePage() {
             </div>
             <div className="flex items-center gap-3">
               <Button variant="outline" asChild>
-                <a href="/user/login">Đăng nhập</a>
+                <a href="/login">{t('home.login')}</a>
               </Button>
               <Button asChild>
-                <a href="/user/login">Thuê xe ngay</a>
+                <a href="/login">{t('home.rentNow')}</a>
               </Button>
             </div>
           </div>
@@ -64,10 +65,10 @@ export default function HomePage() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="text-center mb-12">
           <h2 className="text-4xl font-bold text-gray-900 mb-4">
-            Thuê xe tự lái dễ dàng
+            {t('home.title')}
           </h2>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Khám phá bộ sưu tập xe đa dạng của chúng tôi với giá cả hợp lý và dịch vụ tốt nhất
+            {t('home.subtitle')}
           </p>
         </div>
 
@@ -76,10 +77,10 @@ export default function HomePage() {
           <div className="text-center py-12">
             <Car className="h-16 w-16 text-gray-400 mx-auto mb-4" />
             <h3 className="text-lg font-medium text-gray-900 mb-2">
-              Chưa có xe nào
+              {t('home.empty')}
             </h3>
             <p className="text-gray-500">
-              Hiện tại chưa có xe nào có sẵn. Vui lòng quay lại sau.
+              {t('home.emptyDesc')}
             </p>
           </div>
         ) : (
@@ -107,7 +108,7 @@ export default function HomePage() {
                   <div className="space-y-2 mb-4">
                     <div className="flex items-center text-sm text-gray-600">
                       <Users className="h-4 w-4 mr-2" />
-                      {car.seats} chỗ ngồi
+                      {car.seats} {t('home.carDetails.seats')}
                     </div>
                     <div className="flex items-center text-sm text-gray-600">
                       <Fuel className="h-4 w-4 mr-2" />
@@ -123,10 +124,10 @@ export default function HomePage() {
                       <span className="text-2xl font-bold text-blue-600">
                         {car.price_per_day?.toLocaleString('vi-VN')}đ
                       </span>
-                      <span className="text-sm text-gray-500">/ngày</span>
+                      <span className="text-sm text-gray-500">{t('home.carDetails.perDay')}</span>
                     </div>
                     <Button>
-                      Thuê ngay
+                      {t('home.rentNow')}
                     </Button>
                   </div>
                 </CardContent>
@@ -140,7 +141,7 @@ export default function HomePage() {
       <footer className="bg-white border-t mt-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="text-center text-gray-600">
-            <p>&copy; {new Date().getFullYear()} CarRental. Tất cả quyền được bảo lưu.</p>
+            <p>&copy; {new Date().getFullYear()} CarRental. {t('home.footer')}</p>
           </div>
         </div>
       </footer>

@@ -18,7 +18,8 @@ export const en = {
     import: 'Import',
     close: 'Close',
     confirm: 'Confirm',
-    back: 'Back'
+    back: 'Back',
+    or: 'Or'
   },
 
   // Navigation

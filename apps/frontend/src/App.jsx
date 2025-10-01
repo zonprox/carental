@@ -1,9 +1,9 @@
 import { Routes, Route } from 'react-router-dom'
 import HomePage from './pages/HomePage'
-import UserLogin from './pages/UserLogin'
-import UserRegister from './pages/UserRegister'
-import AdminLogin from './pages/AdminLogin'
-import Dashboard from './pages/admin/Dashboard'
+import Login from './pages/auth/Login'
+import Register from './pages/auth/Register'
+import UserDashboard from './pages/user/Dashboard'
+import AdminDashboard from './pages/admin/Dashboard'
 import CarManagement from './pages/admin/CarManagement'
 import UserManagement from './pages/admin/UserManagement'
 
@@ -12,10 +12,10 @@ function App() {
     <div className="min-h-screen bg-background">
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/user/login" element={<UserLogin />} />
-        <Route path="/register" element={<UserRegister />} />
-        <Route path="/login" element={<AdminLogin />} />
-        <Route path="/admin/dashboard" element={<Dashboard />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/dashboard" element={<UserDashboard />} />
+        <Route path="/admin/dashboard" element={<AdminDashboard />} />
         <Route path="/admin/cars" element={<CarManagement />} />
         <Route path="/admin/users" element={<UserManagement />} />
       </Routes>

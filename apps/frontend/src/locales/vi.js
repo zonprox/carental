@@ -18,7 +18,8 @@ export const vi = {
     import: 'Nhập dữ liệu',
     close: 'Đóng',
     confirm: 'Xác nhận',
-    back: 'Quay lại'
+    back: 'Quay lại',
+    or: 'Hoặc'
   },
 
   // Navigation
