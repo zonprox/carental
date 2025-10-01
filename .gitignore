@@ -9,6 +9,9 @@ pnpm-debug.log*
 client/dist/
 server/dist/
 build/
+apps/frontend/dist/
+apps/backend/public/
+dist/
 
 # Environment variables
 .env

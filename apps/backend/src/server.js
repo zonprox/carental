@@ -22,6 +22,9 @@ import carsRoutes from '../routes/cars.js';
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// Trust proxy if behind reverse proxy (for Docker/nginx/etc)
+app.set('trust proxy', 1);
+
 // Security middleware
 app.use(helmet({
   contentSecurityPolicy: {
@@ -30,9 +33,11 @@ app.use(helmet({
       styleSrc: ["'self'", "'unsafe-inline'"],
       scriptSrc: ["'self'"],
       imgSrc: ["'self'", "data:", "https:"],
+      upgradeInsecureRequests: null, // Disable automatic HTTPS upgrade
     },
   },
-  crossOriginEmbedderPolicy: false
+  crossOriginEmbedderPolicy: false,
+  hsts: false // Disable HSTS to prevent forced HTTPS
 }));
 
 // Rate limiting
