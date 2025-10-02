@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { PageContainer, PageHeader } from '@/components/ui/page-header'
-import { Plus, Edit, Trash2, Save, X, Car as CarIcon } from 'lucide-react'
+import { Plus, Edit, Trash2, Save, X, Car as CarIcon, Loader2, AlertTriangle } from 'lucide-react'
 import AdminLayout from '@/components/admin/AdminLayout'
 import { t } from '@/locales'
 import {
@@ -14,12 +14,26 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
+import { useToast } from '@/hooks/use-toast'
 
 export default function CarManagement() {
+  const { toast } = useToast()
   const [cars, setCars] = useState([])
   const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
   const [editingCar, setEditingCar] = useState(null)
   const [showDialog, setShowDialog] = useState(false)
+  const [deleteDialog, setDeleteDialog] = useState({ open: false, carId: null, carName: '' })
   const [formData, setFormData] = useState({
     name: '',
     brand: '',
@@ -45,9 +59,16 @@ export default function CarManagement() {
       if (response.ok) {
         const data = await response.json()
         setCars(data)
+      } else {
+        throw new Error('Failed to fetch cars')
       }
     } catch (error) {
       console.error('Error fetching cars:', error)
+      toast({
+        variant: "destructive",
+        title: "Lỗi tải dữ liệu",
+        description: "Không thể tải danh sách xe",
+      })
     } finally {
       setLoading(false)
     }
@@ -60,6 +81,7 @@ export default function CarManagement() {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    setSaving(true)
     
     const payload = {
       ...formData,
@@ -82,19 +104,48 @@ export default function CarManagement() {
       })
 
       if (response.ok) {
+        toast({
+          variant: "success",
+          title: editingCar ? "Cập nhật thành công" : "Thêm thành công",
+          description: editingCar 
+            ? `Đã cập nhật thông tin xe "${formData.name}"`
+            : `Đã thêm xe "${formData.name}" vào hệ thống`,
+        })
         fetchCars()
         handleCloseDialog()
+      } else {
+        throw new Error('Failed to save car')
       }
     } catch (error) {
       console.error('Error saving car:', error)
+      toast({
+        variant: "destructive",
+        title: "Lỗi lưu dữ liệu",
+        description: "Không thể lưu thông tin xe",
+      })
+    } finally {
+      setSaving(false)
     }
   }
 
-  const handleDelete = async (id) => {
-    if (!confirm('Bạn có chắc chắn muốn xóa xe này?')) return
+  const openDeleteDialog = (id) => {
+    const car = cars.find(c => c.id === id)
+    setDeleteDialog({
+      open: true,
+      carId: id,
+      carName: car ? car.name : 'xe này'
+    })
+  }
+
+  const closeDeleteDialog = () => {
+    setDeleteDialog({ open: false, carId: null, carName: '' })
+  }
+
+  const handleDelete = async () => {
+    const { carId, carName } = deleteDialog
 
     try {
-      const response = await fetch(`/api/cars/${id}`, {
+      const response = await fetch(`/api/cars/${carId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -102,10 +153,24 @@ export default function CarManagement() {
       })
 
       if (response.ok) {
+        toast({
+          variant: "success",
+          title: "Xóa thành công",
+          description: `Đã xóa xe "${carName}" khỏi hệ thống`,
+        })
+        closeDeleteDialog()
         fetchCars()
+      } else {
+        throw new Error('Failed to delete car')
       }
     } catch (error) {
       console.error('Error deleting car:', error)
+      toast({
+        variant: "destructive",
+        title: "Lỗi xóa xe",
+        description: "Không thể xóa xe",
+      })
+      closeDeleteDialog()
     }
   }
 
@@ -224,7 +289,7 @@ export default function CarManagement() {
                           <Button
                             size="sm"
                             variant="destructive"
-                            onClick={() => handleDelete(car.id)}
+                            onClick={() => openDeleteDialog(car.id)}
                           >
                             <Trash2 className="h-4 w-4" />
                           </Button>
@@ -334,18 +399,66 @@ export default function CarManagement() {
                 </div>
               </div>
               <div className="flex justify-end gap-2 pt-4">
-                <Button type="button" variant="outline" onClick={handleCloseDialog}>
+                <Button type="button" variant="outline" onClick={handleCloseDialog} disabled={saving}>
                   <X className="h-4 w-4 mr-2" />
                   Hủy
                 </Button>
-                <Button type="submit">
-                  <Save className="h-4 w-4 mr-2" />
-                  {editingCar ? 'Cập nhật' : 'Thêm xe'}
+                <Button type="submit" disabled={saving}>
+                  {saving ? (
+                    <>
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      Đang lưu...
+                    </>
+                  ) : (
+                    <>
+                      <Save className="h-4 w-4 mr-2" />
+                      {editingCar ? 'Cập nhật' : 'Thêm xe'}
+                    </>
+                  )}
                 </Button>
               </div>
             </form>
           </DialogContent>
         </Dialog>
+
+        {/* Delete Confirmation Dialog */}
+        <AlertDialog open={deleteDialog.open} onOpenChange={closeDeleteDialog}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <div className="flex items-center gap-4">
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/20">
+                  <AlertTriangle className="h-6 w-6 text-red-600 dark:text-red-400" />
+                </div>
+                <div className="flex-1">
+                  <AlertDialogTitle className="text-left">
+                    Xác nhận xóa xe
+                  </AlertDialogTitle>
+                  <AlertDialogDescription className="text-left">
+                    Bạn có chắc chắn muốn xóa xe <strong>"{deleteDialog.carName}"</strong>?
+                  </AlertDialogDescription>
+                </div>
+              </div>
+            </AlertDialogHeader>
+            <div className="rounded-md bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 p-4">
+              <p className="text-sm text-yellow-800 dark:text-yellow-200">
+                ⚠️ <strong>Cảnh báo:</strong> Hành động này không thể hoàn tác. Thông tin xe này sẽ bị xóa vĩnh viễn khỏi hệ thống.
+              </p>
+            </div>
+            <AlertDialogFooter>
+              <AlertDialogCancel onClick={closeDeleteDialog}>
+                <X className="h-4 w-4 mr-2" />
+                Hủy bỏ
+              </AlertDialogCancel>
+              <AlertDialogAction
+                onClick={handleDelete}
+                className="bg-red-600 hover:bg-red-700 focus:ring-red-600"
+              >
+                <Trash2 className="h-4 w-4 mr-2" />
+                Xóa xe
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </PageContainer>
     </AdminLayout>
   )

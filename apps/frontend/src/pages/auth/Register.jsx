@@ -160,13 +160,12 @@ export default function Register() {
                 <Input
                   id="phone"
                   name="phone"
-                  placeholder="Số điện thoại"
+                  placeholder="Số điện thoại (tùy chọn)"
                   type="tel"
                   autoComplete="tel"
                   disabled={loading}
                   value={formData.phone}
                   onChange={handleInputChange}
-                  required
                 />
               </div>
 
