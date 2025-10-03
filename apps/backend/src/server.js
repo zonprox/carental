@@ -34,11 +34,21 @@ app.use(
         defaultSrc: ["'self'"],
         connectSrc: [
           "'self'",
-          "http://localhost:3001",
+          "http://localhost:3000",
+          "http://localhost:3001", 
+          "http://127.0.0.1:3000",
           "http://127.0.0.1:3001",
+          "ws://localhost:3000", // Vite HMR WebSocket
+          "ws://127.0.0.1:3000",
         ],
         styleSrc: ["'self'", "'unsafe-inline'"],
-        scriptSrc: ["'self'"],
+        scriptSrc: [
+          "'self'",
+          ...(process.env.NODE_ENV === "development" 
+            ? ["'unsafe-inline'", "'unsafe-eval'"] // Allow inline scripts in development for Vite HMR
+            : []
+          ),
+        ],
         imgSrc: ["'self'", "data:", "https:"],
         upgradeInsecureRequests: null, // Disable automatic HTTPS upgrade
       },
