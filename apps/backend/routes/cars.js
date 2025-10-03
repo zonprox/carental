@@ -1,6 +1,6 @@
 import express from "express";
 import { body, validationResult } from "express-validator";
-import pool from "../config/database.js";
+import database from "../config/database.js";
 import { authenticateToken, requireAdmin } from "../middleware/auth.js";
 
 const router = express.Router();
@@ -8,7 +8,7 @@ const router = express.Router();
 // Get all cars (public route)
 router.get("/", async (req, res) => {
   try {
-    const result = await pool.query(
+    const result = await database.query(
       "SELECT * FROM cars WHERE available = true ORDER BY created_at DESC",
     );
     res.json(result.rows);
@@ -22,7 +22,7 @@ router.get("/", async (req, res) => {
 router.get("/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const result = await pool.query("SELECT * FROM cars WHERE id = $1", [id]);
+    const result = await database.query("SELECT * FROM cars WHERE id = $1", [id]);
 
     if (result.rows.length === 0) {
       return res.status(404).json({ message: "Car not found" });
@@ -87,7 +87,7 @@ router.post(
         location,
       } = req.body;
 
-      const result = await pool.query(
+      const result = await database.query(
         `INSERT INTO cars (name, brand, year, seats, fuel_type, price_per_day, image_url, location) 
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *`,
         [
@@ -167,15 +167,16 @@ router.put(
       } = req.body;
 
       // Check if car exists
-      const existingCar = await pool.query(
+      const existingCar = await database.query(
         "SELECT id FROM cars WHERE id = $1",
         [id],
       );
+
       if (existingCar.rows.length === 0) {
         return res.status(404).json({ message: "Car not found" });
       }
 
-      const result = await pool.query(
+      const result = await database.query(
         `UPDATE cars 
        SET name = $1, brand = $2, year = $3, seats = $4, fuel_type = $5, 
            price_per_day = $6, image_url = $7, location = $8, updated_at = CURRENT_TIMESTAMP
@@ -210,14 +211,14 @@ router.delete("/:id", authenticateToken, requireAdmin, async (req, res) => {
     const { id } = req.params;
 
     // Check if car exists
-    const existingCar = await pool.query("SELECT id FROM cars WHERE id = $1", [
+    const existingCar = await database.query("SELECT id FROM cars WHERE id = $1", [
       id,
     ]);
     if (existingCar.rows.length === 0) {
       return res.status(404).json({ message: "Car not found" });
     }
 
-    await pool.query("DELETE FROM cars WHERE id = $1", [id]);
+    await database.query("DELETE FROM cars WHERE id = $1", [id]);
 
     res.json({ message: "Car deleted successfully" });
   } catch (error) {
@@ -237,7 +238,7 @@ router.patch(
       const { available } = req.body;
 
       // Check if car exists
-      const existingCar = await pool.query(
+      const existingCar = await database.query(
         "SELECT id, available FROM cars WHERE id = $1",
         [id],
       );
@@ -245,7 +246,7 @@ router.patch(
         return res.status(404).json({ message: "Car not found" });
       }
 
-      const result = await pool.query(
+      const result = await database.query(
         "UPDATE cars SET available = $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2 RETURNING *",
         [available, id],
       );

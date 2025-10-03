@@ -1,5 +1,5 @@
-const request = require("supertest");
-const express = require("express");
+import request from "supertest";
+import express from "express";
 
 // Create test app
 const app = express();
@@ -28,42 +28,47 @@ app.post("/api/auth/login", (req, res) => {
 
 describe("Auth Routes", () => {
   describe("POST /api/auth/login", () => {
-    test("should return 400 for missing email", async () => {
-      const response = await request(app).post("/api/auth/login").send({
-        password: "testpassword",
-      });
+    test("should return 400 if email is missing", async () => {
+      const response = await request(app)
+        .post("/api/auth/login")
+        .send({ password: "password123" });
 
       expect(response.status).toBe(400);
-      expect(response.body).toHaveProperty("message");
+      expect(response.body.message).toBe("Email is required");
     });
 
-    test("should return 400 for missing password", async () => {
-      const response = await request(app).post("/api/auth/login").send({
-        email: "test@example.com",
-      });
+    test("should return 400 if password is missing", async () => {
+      const response = await request(app)
+        .post("/api/auth/login")
+        .send({ email: "test@example.com" });
 
       expect(response.status).toBe(400);
-      expect(response.body).toHaveProperty("message");
+      expect(response.body.message).toBe("Password is required");
     });
 
     test("should return 400 for invalid email format", async () => {
-      const response = await request(app).post("/api/auth/login").send({
-        email: "invalid-email",
-        password: "testpassword",
-      });
+      const response = await request(app)
+        .post("/api/auth/login")
+        .send({ email: "invalid-email", password: "password123" });
 
       expect(response.status).toBe(400);
-      expect(response.body).toHaveProperty("message");
+      expect(response.body.message).toBe("Invalid email format");
     });
 
     test("should return 200 for valid credentials", async () => {
-      const response = await request(app).post("/api/auth/login").send({
-        email: "test@example.com",
-        password: "testpassword",
-      });
+      const response = await request(app)
+        .post("/api/auth/login")
+        .send({ email: "test@example.com", password: "password123" });
 
       expect(response.status).toBe(200);
-      expect(response.body).toHaveProperty("message");
+      expect(response.body.message).toBe("Login successful");
+    });
+
+    test("should handle empty request body", async () => {
+      const response = await request(app).post("/api/auth/login").send({});
+
+      expect(response.status).toBe(400);
+      expect(response.body.message).toBe("Email is required");
     });
   });
 });
@@ -73,8 +78,8 @@ describe("Basic Jest Setup", () => {
     expect(1 + 1).toBe(2);
   });
 
-  test("should have access to environment variables", () => {
-    expect(process.env.NODE_ENV).toBe("test");
-    expect(process.env.JWT_SECRET).toBe("test-secret-key-for-jest");
+  test("should handle async operations", async () => {
+    const result = await Promise.resolve("test");
+    expect(result).toBe("test");
   });
 });

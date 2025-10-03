@@ -1,4 +1,4 @@
-const dotenv = require("dotenv");
+import dotenv from "dotenv";
 
 // Load test environment variables
 dotenv.config({ path: ".env.test" });
@@ -18,9 +18,11 @@ jest.setTimeout(30000);
 // Global test setup
 beforeAll(async () => {
   // Any global setup can go here
+  console.log("🧪 Starting test suite...");
 });
 
-// Global test teardown
+// Global test cleanup
 afterAll(async () => {
   // Any global cleanup can go here
+  console.log("✅ Test suite completed");
 });

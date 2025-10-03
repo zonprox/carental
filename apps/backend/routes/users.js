@@ -1,7 +1,7 @@
 import express from "express";
 import bcrypt from "bcryptjs";
 import { body, validationResult } from "express-validator";
-import pool from "../config/database.js";
+import database from "../config/database.js";
 import { authenticateToken, requireAdmin } from "../middleware/auth.js";
 
 const router = express.Router();
@@ -9,7 +9,7 @@ const router = express.Router();
 // Get all users (admin only)
 router.get("/", authenticateToken, requireAdmin, async (req, res) => {
   try {
-    const result = await pool.query(
+    const result = await database.query(
       "SELECT id, name, email, phone, address, role, created_at FROM users ORDER BY created_at DESC",
     );
 
@@ -31,7 +31,7 @@ router.get("/:id", authenticateToken, requireAdmin, async (req, res) => {
   try {
     const { id } = req.params;
 
-    const result = await pool.query(
+    const result = await database.query(
       "SELECT id, name, email, phone, address, role, created_at FROM users WHERE id = $1",
       [id],
     );
@@ -88,7 +88,7 @@ router.post(
       const { name, email, password, phone, address, role = "user" } = req.body;
 
       // Check if user already exists
-      const existingUser = await pool.query(
+      const existingUser = await database.query(
         "SELECT id FROM users WHERE email = $1",
         [email],
       );
@@ -104,7 +104,7 @@ router.post(
       const hashedPassword = await bcrypt.hash(password, 10);
 
       // Insert new user
-      const result = await pool.query(
+      const result = await database.query(
         "INSERT INTO users (name, email, password, phone, address, role) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id, name, email, phone, address, role, created_at",
         [name, email, hashedPassword, phone, address, role],
       );
@@ -160,7 +160,7 @@ router.put(
       const { name, email, password, phone, address, role } = req.body;
 
       // Check if user exists
-      const existingUser = await pool.query(
+      const existingUser = await database.query(
         "SELECT id FROM users WHERE id = $1",
         [id],
       );
@@ -174,7 +174,7 @@ router.put(
 
       // Check if email is already taken by another user
       if (email) {
-        const emailCheck = await pool.query(
+        const emailCheck = await database.query(
           "SELECT id FROM users WHERE email = $1 AND id != $2",
           [email, id],
         );
@@ -228,7 +228,7 @@ router.put(
       updateValues.push(id);
       const query = `UPDATE users SET ${updateFields.join(", ")} WHERE id = $${paramCount} RETURNING id, name, email, phone, address, role, created_at`;
 
-      const result = await pool.query(query, updateValues);
+      const result = await database.query(query, updateValues);
 
       res.json({
         success: true,
@@ -251,8 +251,8 @@ router.delete("/:id", authenticateToken, requireAdmin, async (req, res) => {
     const { id } = req.params;
 
     // Check if user exists
-    const existingUser = await pool.query(
-      "SELECT id, name FROM users WHERE id = $1",
+    const existingUser = await database.query(
+      "SELECT id FROM users WHERE id = $1",
       [id],
     );
 
@@ -264,7 +264,7 @@ router.delete("/:id", authenticateToken, requireAdmin, async (req, res) => {
     }
 
     // Delete user
-    await pool.query("DELETE FROM users WHERE id = $1", [id]);
+    await database.query("DELETE FROM users WHERE id = $1", [id]);
 
     res.json({
       success: true,

@@ -2,7 +2,7 @@ import express from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { body, validationResult } from "express-validator";
-import pool from "../config/database.js";
+import database from "../config/database.js";
 
 const router = express.Router();
 
@@ -27,7 +27,7 @@ router.post(
       const { email, password } = req.body;
 
       // Find user by email
-      const userResult = await pool.query(
+      const userResult = await database.query(
         "SELECT id, name, email, password, role FROM users WHERE email = $1",
         [email],
       );
@@ -99,7 +99,7 @@ router.get("/verify", async (req, res) => {
     );
 
     // Verify user still exists
-    const user = await pool.query(
+    const user = await database.query(
       "SELECT id, name, email, role FROM users WHERE id = $1",
       [decoded.userId],
     );
