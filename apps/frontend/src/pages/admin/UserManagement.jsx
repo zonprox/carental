@@ -276,7 +276,7 @@ export default function UserManagement() {
   const stats = {
     total: users.length,
     admins: users.filter(u => u.role === 'admin').length,
-    regularUsers: users.filter(u => u.role === 'user').length
+    regularUsers: users.filter(u => u.role !== 'admin').length
   }
 
   if (loading) {

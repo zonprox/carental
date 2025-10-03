@@ -166,6 +166,58 @@ class MockDatabase {
   handleUpdate(sql, params) {
     const sqlLower = sql.toLowerCase();
 
+    // Handle user updates
+    if (sqlLower.includes('users') && sqlLower.includes('set')) {
+      // Parse the SQL to understand which fields are being updated
+      const userId = parseInt(params[params.length - 1]); // Last parameter is always the ID
+      const userIndex = this.data.users.findIndex(u => u.id === userId);
+      
+      if (userIndex !== -1) {
+        const user = { ...this.data.users[userIndex] };
+        
+        // Parse the SET clause to determine which fields to update
+        const setClause = sql.match(/SET\s+(.*?)\s+WHERE/i);
+        if (setClause) {
+          const fields = setClause[1].split(',').map(f => f.trim());
+          let paramIndex = 0;
+          
+          fields.forEach(field => {
+            const fieldName = field.split('=')[0].trim();
+            const value = params[paramIndex++];
+            
+            switch (fieldName) {
+              case 'name':
+                user.name = value;
+                break;
+              case 'email':
+                user.email = value;
+                break;
+              case 'password':
+                user.password_hash = value;
+                break;
+              case 'phone':
+                user.phone = value;
+                break;
+              case 'address':
+                user.address = value;
+                break;
+              case 'role':
+                user.role = value;
+                break;
+            }
+          });
+        }
+        
+        user.updated_at = new Date().toISOString();
+        this.data.users[userIndex] = user;
+        this.saveData();
+        
+        // Return user without password fields for security
+        const { password, password_hash, ...safeUser } = user;
+        return { rows: [safeUser], rowCount: 1 };
+      }
+    }
+
     // Handle car availability update
     if (sqlLower.includes('cars') && sqlLower.includes('available')) {
       const available = params[0];

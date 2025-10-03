@@ -7,8 +7,37 @@ export default function AdminLayout({ children }) {
 
   useEffect(() => {
     const token = localStorage.getItem('token')
+    const userStr = localStorage.getItem('user')
+    
     if (!token) {
       navigate('/login')
+      return
+    }
+
+    if (!userStr) {
+      localStorage.removeItem('token')
+      navigate('/login')
+      return
+    }
+
+    try {
+      const user = JSON.parse(userStr)
+      // Check if user has admin role
+      if (user.role !== 'admin') {
+        // Redirect non-admin users to their appropriate dashboard
+        if (user.role === 'user') {
+          navigate('/user/dashboard')
+        } else {
+          navigate('/login')
+        }
+        return
+      }
+    } catch (error) {
+      // If parsing fails, clear invalid data and redirect
+      localStorage.removeItem('token')
+      localStorage.removeItem('user')
+      navigate('/login')
+      return
     }
   }, [navigate])
 

@@ -3,12 +3,74 @@
     {
       "id": 1,
       "username": "admin",
-      "name": "Quản Trị Viên",
+      "name": "Nguyễn Văn Quản",
       "email": "admin@carental.com",
       "password": "admin123",
+      "phone": "0901234567",
+      "address": "123 Đường Lê Lợi, Quận 1, TP.HCM",
       "role": "admin",
-      "created_at": "2025-09-30T02:21:47.785Z",
-      "updated_at": "2025-09-30T02:21:47.785Z"
+      "created_at": "2024-01-15T08:30:00.000Z",
+      "updated_at": "2024-01-15T08:30:00.000Z"
+    },
+    {
+      "id": 2,
+      "username": "leminhtuan",
+      "name": "Le Minh Tuan (Updated)",
+      "email": "leminhtuan@gmail.com",
+      "password_hash": "$2a$10$n1H65LO4RbGO3u3djCB5Ve0DG1RRI6Jedt3Xt4xd9UlalmMD8LCf6",
+      "phone": "0987654999",
+      "address": "456 Đường Nguyễn Huệ, Quận Hải Châu, Đà Nẵng",
+      "role": "user",
+      "created_at": "2024-02-20T14:15:30.000Z",
+      "updated_at": "2025-10-03T07:09:35.474Z"
+    },
+    {
+      "id": 3,
+      "username": "tranthimai",
+      "name": "Trần Thị Mai",
+      "email": "tranthimai@yahoo.com",
+      "password_hash": "$2a$10$abcdefghijklmnopqrstuvwxyz1234567890ABCDEFG",
+      "phone": "0912345678",
+      "address": "789 Đường Trần Hưng Đạo, Quận Hoàn Kiếm, Hà Nội",
+      "role": "user",
+      "created_at": "2024-03-10T09:45:20.000Z",
+      "updated_at": "2024-03-10T09:45:20.000Z"
+    },
+    {
+      "id": 4,
+      "username": "phamvannam",
+      "name": "Phạm Văn Nam",
+      "email": "phamvannam@hotmail.com",
+      "password_hash": "$2a$10$xyz123abc456def789ghi012jkl345mno678pqr901stu",
+      "phone": "0923456789",
+      "address": "321 Đường Võ Văn Tần, Quận 3, TP.HCM",
+      "role": "user",
+      "created_at": "2024-04-05T16:20:10.000Z",
+      "updated_at": "2024-04-05T16:20:10.000Z"
+    },
+    {
+      "id": 5,
+      "username": "hoangthilan",
+      "name": "Hoàng Thị Lan",
+      "email": "hoangthilan@gmail.com",
+      "password_hash": "$2a$10$qwe789rty456uio123asd890fgh567jkl234zxc901bnm",
+      "phone": "0934567890",
+      "address": "654 Đường Lý Thường Kiệt, Quận Tân Bình, TP.HCM",
+      "role": "manager",
+      "created_at": "2024-05-12T11:30:45.000Z",
+      "updated_at": "2024-05-12T11:30:45.000Z"
+    },
+    {
+      "id": 6,
+      "username": "vudinhlong",
+      "name": "Vũ Đình Long",
+      "email": "vudinhlong@outlook.com",
+      "password_hash": "$2a$10$mno345pqr678stu901vwx234yzab567cde890fgh123ijk",
+      "phone": "0945678901",
+      "address": "987 Đường Hai Bà Trưng, Quận 1, TP.HCM",
+      "role": "user",
+      "created_at": "2024-06-18T13:25:15.000Z",
+      "updated_at": "2024-06-18T13:25:15.000Z"
     }
   ],
   "cars": [

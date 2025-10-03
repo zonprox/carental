@@ -1,7 +1,7 @@
 import express from 'express';
 import { body, validationResult } from 'express-validator';
 import pool from '../config/database.js';
-import { authenticateToken } from '../middleware/auth.js';
+import { authenticateToken, requireAdmin } from '../middleware/auth.js';
 
 const router = express.Router();
 
@@ -35,8 +35,8 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// Create new car (protected route)
-router.post('/', authenticateToken, [
+// Create new car (admin only)
+router.post('/', authenticateToken, requireAdmin, [
   body('name').trim().isLength({ min: 1 }).withMessage('Car name is required'),
   body('brand').trim().isLength({ min: 1 }).withMessage('Brand is required'),
   body('year').isInt({ min: 1900, max: new Date().getFullYear() + 1 }).withMessage('Valid year is required'),
@@ -74,8 +74,8 @@ router.post('/', authenticateToken, [
   }
 });
 
-// Update car (protected route)
-router.put('/:id', authenticateToken, [
+// Update car (admin only)
+router.put('/:id', authenticateToken, requireAdmin, [
   body('name').trim().isLength({ min: 1 }).withMessage('Car name is required'),
   body('brand').trim().isLength({ min: 1 }).withMessage('Brand is required'),
   body('year').isInt({ min: 1900, max: new Date().getFullYear() + 1 }).withMessage('Valid year is required'),
@@ -122,8 +122,8 @@ router.put('/:id', authenticateToken, [
   }
 });
 
-// Delete car (protected route)
-router.delete('/:id', authenticateToken, async (req, res) => {
+// Delete car (admin only)
+router.delete('/:id', authenticateToken, requireAdmin, async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -142,8 +142,8 @@ router.delete('/:id', authenticateToken, async (req, res) => {
   }
 });
 
-// Toggle car availability (protected route)
-router.patch('/:id/availability', authenticateToken, async (req, res) => {
+// Toggle car availability (admin only)
+router.patch('/:id/availability', authenticateToken, requireAdmin, async (req, res) => {
   try {
     const { id } = req.params;
     const { available } = req.body;

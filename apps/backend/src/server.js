@@ -18,6 +18,7 @@ const __dirname = dirname(__filename);
 // Import routes
 import authRoutes from '../routes/auth.js';
 import carsRoutes from '../routes/cars.js';
+import usersRoutes from '../routes/users.js';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -30,6 +31,7 @@ app.use(helmet({
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
+      connectSrc: ["'self'", "http://localhost:3001", "http://127.0.0.1:3001"],
       styleSrc: ["'self'", "'unsafe-inline'"],
       scriptSrc: ["'self'"],
       imgSrc: ["'self'", "data:", "https:"],
@@ -75,6 +77,7 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 // API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/cars', carsRoutes);
+app.use('/api/users', usersRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
