@@ -1,5 +1,5 @@
-import mockDatabase from '../services/mockDatabase.js';
-import dotenv from 'dotenv';
+import mockDatabase from "../services/mockDatabase.js";
+import dotenv from "dotenv";
 
 dotenv.config();
 
@@ -7,6 +7,6 @@ dotenv.config();
 const pool = mockDatabase;
 
 // Simulate connection events
-console.log('Connected to Mock Database (JSON-based)');
+console.log("Connected to Mock Database (JSON-based)");
 
 export default pool;

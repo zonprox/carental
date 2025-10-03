@@ -1,49 +1,47 @@
-import { cn } from '@/lib/utils'
+import { cn } from "@/lib/utils";
 
 /**
  * EmptyState - Reusable empty state component
  * Used when no data is available
  */
-export function EmptyState({ 
-  icon: Icon, 
-  title, 
-  description, 
+export function EmptyState({
+  icon: Icon,
+  title,
+  description,
   action,
   className,
-  ...props 
+  ...props
 }) {
   return (
     <div className={cn("text-center py-12", className)} {...props}>
-      {Icon && <Icon className="h-16 w-16 text-muted-foreground mx-auto mb-4" />}
+      {Icon && (
+        <Icon className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
+      )}
       {title && (
-        <h3 className="text-lg font-medium text-foreground mb-2">
-          {title}
-        </h3>
+        <h3 className="text-lg font-medium text-foreground mb-2">{title}</h3>
       )}
       {description && (
-        <p className="text-muted-foreground mb-4">
-          {description}
-        </p>
+        <p className="text-muted-foreground mb-4">{description}</p>
       )}
       {action}
     </div>
-  )
+  );
 }
 
 /**
  * TableEmptyState - Empty state for tables
  */
-export function TableEmptyState({ 
-  colSpan, 
-  icon: Icon, 
-  title, 
+export function TableEmptyState({
+  colSpan,
+  icon: Icon,
+  title,
   description,
-  ...props 
+  ...props
 }) {
   return (
     <tr>
       <td colSpan={colSpan} className="text-center py-12">
-        <EmptyState 
+        <EmptyState
           icon={Icon}
           title={title}
           description={description}
@@ -51,5 +49,5 @@ export function TableEmptyState({
         />
       </td>
     </tr>
-  )
+  );
 }

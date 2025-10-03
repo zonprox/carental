@@ -1,5 +1,5 @@
-import { useNavigate } from 'react-router-dom'
-import { 
+import { useNavigate } from "react-router-dom";
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -12,13 +12,13 @@ import {
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
   DropdownMenuGroup,
-} from '@/components/ui/dropdown-menu'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Button } from '@/components/ui/button'
-import { useTheme } from '@/components/ThemeProvider'
-import { 
-  User, 
-  LogOut, 
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { useTheme } from "@/components/ThemeProvider";
+import {
+  User,
+  LogOut,
   Palette,
   Sun,
   Moon,
@@ -27,36 +27,41 @@ import {
   Settings,
   Shield,
   Home,
-} from 'lucide-react'
-import { t } from '@/locales'
+} from "lucide-react";
+import { t } from "@/locales";
 
 export default function UserMenu({ user, onLogout }) {
-  const { theme, setTheme } = useTheme()
-  const navigate = useNavigate()
+  const { theme, setTheme } = useTheme();
+  const navigate = useNavigate();
 
   // User data with fallbacks
   const userData = {
-    name: user?.name || t('userMenu.fallback.name'),
-    email: user?.email || t('userMenu.fallback.email'),
+    name: user?.name || t("userMenu.fallback.name"),
+    email: user?.email || t("userMenu.fallback.email"),
     avatar: user?.avatar || null,
-    initials: user?.name 
-      ? user.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
-      : t('userMenu.fallback.initials')
-  }
+    initials: user?.name
+      ? user.name
+          .split(" ")
+          .map((n) => n[0])
+          .join("")
+          .toUpperCase()
+          .slice(0, 2)
+      : t("userMenu.fallback.initials"),
+  };
 
   const handleLogout = () => {
     if (onLogout) {
-      onLogout()
+      onLogout();
     }
-  }
+  };
 
   const handleThemeChange = (newTheme) => {
-    setTheme(newTheme)
-  }
+    setTheme(newTheme);
+  };
 
   const handleNavigate = (path) => {
-    navigate(path)
-  }
+    navigate(path);
+  };
 
   // Loading skeleton
   if (!user && !userData.name) {
@@ -69,14 +74,14 @@ export default function UserMenu({ user, onLogout }) {
         </div>
         <div className="h-4 w-4 bg-muted rounded animate-pulse" />
       </div>
-    )
+    );
   }
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button 
-          variant="ghost" 
+        <Button
+          variant="ghost"
           className="w-full justify-start gap-2 px-2 h-auto py-2 rounded-full hover:bg-accent data-[state=open]:bg-accent transition-colors ring-2 ring-primary/10 hover:ring-primary/20"
         >
           <Avatar className="h-8 w-8">
@@ -86,17 +91,21 @@ export default function UserMenu({ user, onLogout }) {
             </AvatarFallback>
           </Avatar>
           <div className="grid flex-1 text-left text-sm leading-tight">
-            <span className="truncate font-semibold text-foreground">{userData.name}</span>
-            <span className="truncate text-xs text-muted-foreground">{userData.email}</span>
+            <span className="truncate font-semibold text-foreground">
+              {userData.name}
+            </span>
+            <span className="truncate text-xs text-muted-foreground">
+              {userData.email}
+            </span>
           </div>
           <ChevronsUpDown className="ml-auto h-4 w-4 text-muted-foreground" />
         </Button>
       </DropdownMenuTrigger>
-      
-      <DropdownMenuContent 
-        className="w-64 rounded-lg shadow-lg" 
+
+      <DropdownMenuContent
+        className="w-64 rounded-lg shadow-lg"
         side="right"
-        align="end" 
+        align="end"
         sideOffset={8}
       >
         {/* User Info Header */}
@@ -111,25 +120,32 @@ export default function UserMenu({ user, onLogout }) {
             <div className="grid flex-1 text-left leading-tight">
               <div className="flex items-center gap-1.5">
                 <Shield className="h-3.5 w-3.5 text-orange-600 dark:text-orange-400" />
-                <span className="truncate font-semibold text-sm text-foreground">{userData.name}</span>
+                <span className="truncate font-semibold text-sm text-foreground">
+                  {userData.name}
+                </span>
               </div>
-              <span className="truncate text-xs text-muted-foreground">{userData.email}</span>
+              <span className="truncate text-xs text-muted-foreground">
+                {userData.email}
+              </span>
             </div>
           </div>
         </DropdownMenuLabel>
-        
+
         <DropdownMenuSeparator />
-        
+
         {/* Go to Homepage */}
         <DropdownMenuGroup>
-          <DropdownMenuItem onClick={() => handleNavigate('/')} className="cursor-pointer">
+          <DropdownMenuItem
+            onClick={() => handleNavigate("/")}
+            className="cursor-pointer"
+          >
             <Home className="mr-2 h-4 w-4" />
             <span>Về trang chủ</span>
           </DropdownMenuItem>
         </DropdownMenuGroup>
-        
+
         <DropdownMenuSeparator />
-        
+
         {/* Account Section */}
         <DropdownMenuGroup>
           <DropdownMenuItem className="cursor-pointer">
@@ -141,9 +157,9 @@ export default function UserMenu({ user, onLogout }) {
             <span>Cài đặt</span>
           </DropdownMenuItem>
         </DropdownMenuGroup>
-        
+
         <DropdownMenuSeparator />
-        
+
         {/* Appearance Theme */}
         <DropdownMenuGroup>
           <DropdownMenuSub>
@@ -152,7 +168,10 @@ export default function UserMenu({ user, onLogout }) {
               <span>Giao diện</span>
             </DropdownMenuSubTrigger>
             <DropdownMenuSubContent className="rounded-lg w-48">
-              <DropdownMenuRadioGroup value={theme} onValueChange={handleThemeChange}>
+              <DropdownMenuRadioGroup
+                value={theme}
+                onValueChange={handleThemeChange}
+              >
                 <DropdownMenuRadioItem value="light" className="cursor-pointer">
                   <Sun className="mr-2 h-4 w-4" />
                   <span>Sáng</span>
@@ -161,7 +180,10 @@ export default function UserMenu({ user, onLogout }) {
                   <Moon className="mr-2 h-4 w-4" />
                   <span>Tối</span>
                 </DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="system" className="cursor-pointer">
+                <DropdownMenuRadioItem
+                  value="system"
+                  className="cursor-pointer"
+                >
                   <Monitor className="mr-2 h-4 w-4" />
                   <span>Hệ thống</span>
                 </DropdownMenuRadioItem>
@@ -169,11 +191,11 @@ export default function UserMenu({ user, onLogout }) {
             </DropdownMenuSubContent>
           </DropdownMenuSub>
         </DropdownMenuGroup>
-        
+
         <DropdownMenuSeparator />
-        
+
         {/* Logout */}
-        <DropdownMenuItem 
+        <DropdownMenuItem
           className="cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10"
           onClick={handleLogout}
         >
@@ -182,5 +204,5 @@ export default function UserMenu({ user, onLogout }) {
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  )
+  );
 }

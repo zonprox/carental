@@ -1,55 +1,59 @@
-import { useState, useEffect, useCallback } from 'react'
-import { Button } from '@/components/ui/button'
-import { CarCard } from '@/components/ui/car-card'
-import { LoadingSpinner } from '@/components/ui/loading-spinner'
-import { EmptyState } from '@/components/ui/empty-state'
-import { ThemeToggle } from '@/components/ThemeToggle'
-import UserNavMenu from '@/components/UserNavMenu'
-import { Car } from 'lucide-react'
-import { t } from '@/locales'
+import { useState, useEffect, useCallback } from "react";
+import { Button } from "@/components/ui/button";
+import { CarCard } from "@/components/ui/car-card";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import { EmptyState } from "@/components/ui/empty-state";
+import { ThemeToggle } from "@/components/ThemeToggle";
+import UserNavMenu from "@/components/UserNavMenu";
+import { Car } from "lucide-react";
+import { t } from "@/locales";
 
 export default function HomePage() {
-  const [cars, setCars] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [user, setUser] = useState(null)
+  const [cars, setCars] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(null);
 
   const fetchCars = useCallback(async () => {
     try {
-      const response = await fetch('/api/cars')
+      const response = await fetch("/api/cars");
       if (response.ok) {
-        const data = await response.json()
-        setCars(data)
+        const data = await response.json();
+        setCars(data);
       } else {
-        console.error('Failed to fetch cars:', response.status, response.statusText)
+        console.error(
+          "Failed to fetch cars:",
+          response.status,
+          response.statusText,
+        );
       }
     } catch (error) {
-      console.error('Error fetching cars:', error)
+      console.error("Error fetching cars:", error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
-    fetchCars()
-    
+    fetchCars();
+
     // Check if user is logged in
-    const token = localStorage.getItem('token')
-    const userData = localStorage.getItem('user')
+    const token = localStorage.getItem("token");
+    const userData = localStorage.getItem("user");
     if (token && userData) {
       try {
-        setUser(JSON.parse(userData))
+        setUser(JSON.parse(userData));
       } catch (error) {
-        console.error('Error parsing user data:', error)
+        console.error("Error parsing user data:", error);
       }
     }
-  }, [fetchCars])
+  }, [fetchCars]);
 
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <LoadingSpinner size="lg" text="Đang tải danh sách xe..." icon={Car} />
       </div>
-    )
+    );
   }
 
   return (
@@ -69,7 +73,7 @@ export default function HomePage() {
               ) : (
                 <>
                   <Button variant="outline" asChild>
-                    <a href="/login">{t('home.login')}</a>
+                    <a href="/login">{t("home.login")}</a>
                   </Button>
                   <Button asChild>
                     <a href="/register">Đăng ký</a>
@@ -85,10 +89,10 @@ export default function HomePage() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="text-center mb-12">
           <h2 className="text-4xl font-bold text-foreground mb-4">
-            {t('home.title')}
+            {t("home.title")}
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            {t('home.subtitle')}
+            {t("home.subtitle")}
           </p>
         </div>
 
@@ -96,16 +100,16 @@ export default function HomePage() {
         {cars.length === 0 ? (
           <EmptyState
             icon={Car}
-            title={t('home.empty')}
-            description={t('home.emptyDesc')}
+            title={t("home.empty")}
+            description={t("home.emptyDesc")}
           />
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {cars.map((car) => (
-              <CarCard 
-                key={car.id} 
+              <CarCard
+                key={car.id}
                 car={car}
-                onRent={(car) => window.location.href = '/login'}
+                onRent={(_car) => (window.location.href = "/login")}
               />
             ))}
           </div>
@@ -116,10 +120,12 @@ export default function HomePage() {
       <footer className="bg-card border-t mt-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="text-center text-muted-foreground">
-            <p>&copy; {new Date().getFullYear()} CarRental. {t('home.footer')}</p>
+            <p>
+              &copy; {new Date().getFullYear()} CarRental. {t("home.footer")}
+            </p>
           </div>
         </div>
       </footer>
     </div>
-  )
+  );
 }

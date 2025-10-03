@@ -1,68 +1,74 @@
-import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { StatCard } from '@/components/ui/stat-card'
-import { CarCard } from '@/components/ui/car-card'
-import { LoadingSpinner } from '@/components/ui/loading-spinner'
-import { EmptyState } from '@/components/ui/empty-state'
-import { ThemeToggle } from '@/components/ThemeToggle'
-import UserNavMenu from '@/components/UserNavMenu'
-import { Car, Users, Calendar, CreditCard } from 'lucide-react'
-import { t } from '@/locales'
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { StatCard } from "@/components/ui/stat-card";
+import { CarCard } from "@/components/ui/car-card";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import { EmptyState } from "@/components/ui/empty-state";
+import { ThemeToggle } from "@/components/ThemeToggle";
+import UserNavMenu from "@/components/UserNavMenu";
+import { Car, Users, Calendar, CreditCard } from "lucide-react";
+import { t } from "@/locales";
 
 export default function UserDashboard() {
-  const [user, setUser] = useState(null)
-  const [cars, setCars] = useState([])
-  const [loading, setLoading] = useState(true)
-  const navigate = useNavigate()
+  const [user, setUser] = useState(null);
+  const [cars, setCars] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const token = localStorage.getItem('token')
-    const userData = localStorage.getItem('user')
-    
+    const token = localStorage.getItem("token");
+    const userData = localStorage.getItem("user");
+
     if (!token || !userData) {
-      navigate('/login')
-      return
+      navigate("/login");
+      return;
     }
 
-    const parsedUser = JSON.parse(userData)
-    
+    const parsedUser = JSON.parse(userData);
+
     // Check if user is actually admin trying to access user dashboard
-    if (parsedUser.role === 'admin') {
-      navigate('/admin/dashboard')
-      return
+    if (parsedUser.role === "admin") {
+      navigate("/admin/dashboard");
+      return;
     }
-    
-    setUser(parsedUser)
-    fetchCars()
-  }, [navigate])
+
+    setUser(parsedUser);
+    fetchCars();
+  }, [navigate]);
 
   const fetchCars = async () => {
     try {
-      const response = await fetch('/api/cars')
+      const response = await fetch("/api/cars");
       if (response.ok) {
-        const data = await response.json()
-        setCars(data.slice(0, 6)) // Show first 6 cars
+        const data = await response.json();
+        setCars(data.slice(0, 6)); // Show first 6 cars
       }
     } catch (error) {
-      console.error('Error fetching cars:', error)
+      console.error("Error fetching cars:", error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const handleLogout = () => {
-    localStorage.removeItem('token')
-    localStorage.removeItem('user')
-    navigate('/login')
-  }
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    navigate("/login");
+  };
 
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <LoadingSpinner size="lg" text="Đang tải dashboard..." icon={Car} />
       </div>
-    )
+    );
   }
 
   return (
@@ -87,7 +93,7 @@ export default function UserDashboard() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
           <h2 className="text-3xl font-bold text-foreground mb-2">
-            {t('dashboard.title')}
+            {t("dashboard.title")}
           </h2>
           <p className="text-muted-foreground">
             Chào mừng bạn đến với hệ thống thuê xe CarRental
@@ -134,16 +140,16 @@ export default function UserDashboard() {
             {cars.length === 0 ? (
               <EmptyState
                 icon={Car}
-                title={t('home.empty')}
-                description={t('home.emptyDesc')}
+                title={t("home.empty")}
+                description={t("home.emptyDesc")}
               />
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {cars.map((car) => (
-                  <CarCard 
-                    key={car.id} 
+                  <CarCard
+                    key={car.id}
                     car={car}
-                    onRent={(car) => console.log('Rent car:', car)}
+                    onRent={(car) => console.log("Rent car:", car)}
                   />
                 ))}
               </div>
@@ -152,6 +158,5 @@ export default function UserDashboard() {
         </Card>
       </main>
     </div>
-  )
+  );
 }
-

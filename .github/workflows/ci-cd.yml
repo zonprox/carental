@@ -36,7 +36,7 @@ jobs:
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: '22.20.0'
+        node-version: '22'
         cache: 'npm'
 
     - name: Install backend dependencies
@@ -65,7 +65,7 @@ jobs:
     - name: Run frontend tests
       run: |
         cd apps/frontend
-        npm test
+        npm run test:ci
 
     - name: Build frontend
       run: |

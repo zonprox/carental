@@ -1,19 +1,35 @@
-import { useState, useEffect } from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { PageContainer, PageHeader } from '@/components/ui/page-header'
-import { Plus, Edit, Trash2, Save, X, Car as CarIcon, Loader2, AlertTriangle } from 'lucide-react'
-import AdminLayout from '@/components/admin/AdminLayout'
-import { t } from '@/locales'
+import { useState, useEffect } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { PageContainer, PageHeader } from "@/components/ui/page-header";
+import {
+  Plus,
+  Edit,
+  Trash2,
+  Save,
+  X,
+  Car as CarIcon,
+  Loader2,
+  AlertTriangle,
+} from "lucide-react";
+import AdminLayout from "@/components/admin/AdminLayout";
+import { t } from "@/locales";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog'
+} from "@/components/ui/dialog";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -23,159 +39,163 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from '@/components/ui/alert-dialog'
-import { useToast } from '@/hooks/use-toast'
+} from "@/components/ui/alert-dialog";
+import { useToast } from "@/hooks/use-toast";
 
 export default function CarManagement() {
-  const { toast } = useToast()
-  const [cars, setCars] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [saving, setSaving] = useState(false)
-  const [editingCar, setEditingCar] = useState(null)
-  const [showDialog, setShowDialog] = useState(false)
-  const [deleteDialog, setDeleteDialog] = useState({ open: false, carId: null, carName: '' })
+  const { toast } = useToast();
+  const [cars, setCars] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [editingCar, setEditingCar] = useState(null);
+  const [showDialog, setShowDialog] = useState(false);
+  const [deleteDialog, setDeleteDialog] = useState({
+    open: false,
+    carId: null,
+    carName: "",
+  });
   const [formData, setFormData] = useState({
-    name: '',
-    brand: '',
-    year: '',
-    seats: '',
-    fuel_type: '',
-    price_per_day: '',
-    image_url: '',
-    location: ''
-  })
+    name: "",
+    brand: "",
+    year: "",
+    seats: "",
+    fuel_type: "",
+    price_per_day: "",
+    image_url: "",
+    location: "",
+  });
 
   useEffect(() => {
-    fetchCars()
-  }, [])
+    fetchCars();
+  }, []);
 
   const fetchCars = async () => {
     try {
-      const response = await fetch('/api/cars', {
+      const response = await fetch("/api/cars", {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      })
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
       if (response.ok) {
-        const data = await response.json()
-        setCars(data)
+        const data = await response.json();
+        setCars(data);
       } else {
-        throw new Error('Failed to fetch cars')
+        throw new Error("Failed to fetch cars");
       }
     } catch (error) {
-      console.error('Error fetching cars:', error)
+      console.error("Error fetching cars:", error);
       toast({
         variant: "destructive",
         title: "Lỗi tải dữ liệu",
         description: "Không thể tải danh sách xe",
-      })
+      });
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target
-    setFormData(prev => ({ ...prev, [name]: value }))
-  }
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    setSaving(true)
-    
+    e.preventDefault();
+    setSaving(true);
+
     const payload = {
       ...formData,
       year: parseInt(formData.year),
       seats: parseInt(formData.seats),
-      price_per_day: parseFloat(formData.price_per_day)
-    }
+      price_per_day: parseFloat(formData.price_per_day),
+    };
 
     try {
-      const url = editingCar ? `/api/cars/${editingCar.id}` : '/api/cars'
-      const method = editingCar ? 'PUT' : 'POST'
-      
+      const url = editingCar ? `/api/cars/${editingCar.id}` : "/api/cars";
+      const method = editingCar ? "PUT" : "POST";
+
       const response = await fetch(url, {
         method,
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
-        body: JSON.stringify(payload)
-      })
+        body: JSON.stringify(payload),
+      });
 
       if (response.ok) {
         toast({
           variant: "success",
           title: editingCar ? "Cập nhật thành công" : "Thêm thành công",
-          description: editingCar 
+          description: editingCar
             ? `Đã cập nhật thông tin xe "${formData.name}"`
             : `Đã thêm xe "${formData.name}" vào hệ thống`,
-        })
-        fetchCars()
-        handleCloseDialog()
+        });
+        fetchCars();
+        handleCloseDialog();
       } else {
-        throw new Error('Failed to save car')
+        throw new Error("Failed to save car");
       }
     } catch (error) {
-      console.error('Error saving car:', error)
+      console.error("Error saving car:", error);
       toast({
         variant: "destructive",
         title: "Lỗi lưu dữ liệu",
         description: "Không thể lưu thông tin xe",
-      })
+      });
     } finally {
-      setSaving(false)
+      setSaving(false);
     }
-  }
+  };
 
   const openDeleteDialog = (id) => {
-    const car = cars.find(c => c.id === id)
+    const car = cars.find((c) => c.id === id);
     setDeleteDialog({
       open: true,
       carId: id,
-      carName: car ? car.name : 'xe này'
-    })
-  }
+      carName: car ? car.name : "xe này",
+    });
+  };
 
   const closeDeleteDialog = () => {
-    setDeleteDialog({ open: false, carId: null, carName: '' })
-  }
+    setDeleteDialog({ open: false, carId: null, carName: "" });
+  };
 
   const handleDelete = async () => {
-    const { carId, carName } = deleteDialog
+    const { carId, carName } = deleteDialog;
 
     try {
       const response = await fetch(`/api/cars/${carId}`, {
-        method: 'DELETE',
+        method: "DELETE",
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      })
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
 
       if (response.ok) {
         toast({
           variant: "success",
           title: "Xóa thành công",
           description: `Đã xóa xe "${carName}" khỏi hệ thống`,
-        })
-        closeDeleteDialog()
-        fetchCars()
+        });
+        closeDeleteDialog();
+        fetchCars();
       } else {
-        throw new Error('Failed to delete car')
+        throw new Error("Failed to delete car");
       }
     } catch (error) {
-      console.error('Error deleting car:', error)
+      console.error("Error deleting car:", error);
       toast({
         variant: "destructive",
         title: "Lỗi xóa xe",
         description: "Không thể xóa xe",
-      })
-      closeDeleteDialog()
+      });
+      closeDeleteDialog();
     }
-  }
+  };
 
   const handleEdit = (car) => {
-    setEditingCar(car)
+    setEditingCar(car);
     setFormData({
       name: car.name,
       brand: car.brand,
@@ -183,41 +203,41 @@ export default function CarManagement() {
       seats: car.seats.toString(),
       fuel_type: car.fuel_type,
       price_per_day: car.price_per_day.toString(),
-      image_url: car.image_url || '',
-      location: car.location || ''
-    })
-    setShowDialog(true)
-  }
+      image_url: car.image_url || "",
+      location: car.location || "",
+    });
+    setShowDialog(true);
+  };
 
   const handleAdd = () => {
-    setEditingCar(null)
+    setEditingCar(null);
     setFormData({
-      name: '',
-      brand: '',
-      year: '',
-      seats: '',
-      fuel_type: '',
-      price_per_day: '',
-      image_url: '',
-      location: ''
-    })
-    setShowDialog(true)
-  }
+      name: "",
+      brand: "",
+      year: "",
+      seats: "",
+      fuel_type: "",
+      price_per_day: "",
+      image_url: "",
+      location: "",
+    });
+    setShowDialog(true);
+  };
 
   const handleCloseDialog = () => {
-    setShowDialog(false)
-    setEditingCar(null)
+    setShowDialog(false);
+    setEditingCar(null);
     setFormData({
-      name: '',
-      brand: '',
-      year: '',
-      seats: '',
-      fuel_type: '',
-      price_per_day: '',
-      image_url: '',
-      location: ''
-    })
-  }
+      name: "",
+      brand: "",
+      year: "",
+      seats: "",
+      fuel_type: "",
+      price_per_day: "",
+      image_url: "",
+      location: "",
+    });
+  };
 
   if (loading) {
     return (
@@ -226,19 +246,16 @@ export default function CarManagement() {
           <CarIcon className="h-12 w-12 animate-spin text-blue-600" />
         </div>
       </AdminLayout>
-    )
+    );
   }
 
   return (
     <AdminLayout>
       <PageContainer>
-        <PageHeader 
-          title={t('cars.title')}
-          description={t('cars.subtitle')}
-        >
+        <PageHeader title={t("cars.title")} description={t("cars.subtitle")}>
           <Button onClick={handleAdd}>
             <Plus className="h-4 w-4 mr-2" />
-            {t('cars.addNew')}
+            {t("cars.addNew")}
           </Button>
         </PageHeader>
 
@@ -248,20 +265,39 @@ export default function CarManagement() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="text-foreground">{t('cars.table.name')}</TableHead>
-                  <TableHead className="text-foreground">{t('cars.table.brand')}</TableHead>
-                  <TableHead className="text-foreground">{t('cars.table.year')}</TableHead>
-                  <TableHead className="text-foreground">{t('cars.table.seats')}</TableHead>
-                  <TableHead className="text-foreground">{t('cars.table.fuel')}</TableHead>
-                  <TableHead className="text-foreground">{t('cars.table.location')}</TableHead>
-                  <TableHead className="text-right text-foreground">{t('cars.table.price')}</TableHead>
-                  <TableHead className="text-right text-foreground">{t('cars.table.actions')}</TableHead>
+                  <TableHead className="text-foreground">
+                    {t("cars.table.name")}
+                  </TableHead>
+                  <TableHead className="text-foreground">
+                    {t("cars.table.brand")}
+                  </TableHead>
+                  <TableHead className="text-foreground">
+                    {t("cars.table.year")}
+                  </TableHead>
+                  <TableHead className="text-foreground">
+                    {t("cars.table.seats")}
+                  </TableHead>
+                  <TableHead className="text-foreground">
+                    {t("cars.table.fuel")}
+                  </TableHead>
+                  <TableHead className="text-foreground">
+                    {t("cars.table.location")}
+                  </TableHead>
+                  <TableHead className="text-right text-foreground">
+                    {t("cars.table.price")}
+                  </TableHead>
+                  <TableHead className="text-right text-foreground">
+                    {t("cars.table.actions")}
+                  </TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {cars.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={8} className="text-center py-12 text-gray-500">
+                    <TableCell
+                      colSpan={8}
+                      className="text-center py-12 text-gray-500"
+                    >
                       Chưa có xe nào trong hệ thống
                     </TableCell>
                   </TableRow>
@@ -273,9 +309,9 @@ export default function CarManagement() {
                       <TableCell>{car.year}</TableCell>
                       <TableCell>{car.seats}</TableCell>
                       <TableCell>{car.fuel_type}</TableCell>
-                      <TableCell>{car.location || 'Hà Nội'}</TableCell>
+                      <TableCell>{car.location || "Hà Nội"}</TableCell>
                       <TableCell className="text-right font-semibold">
-                        {car.price_per_day?.toLocaleString('vi-VN')}đ
+                        {car.price_per_day?.toLocaleString("vi-VN")}đ
                       </TableCell>
                       <TableCell className="text-right">
                         <div className="flex justify-end gap-2">
@@ -308,10 +344,10 @@ export default function CarManagement() {
           <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>
-                {editingCar ? 'Chỉnh sửa xe' : 'Thêm xe mới'}
+                {editingCar ? "Chỉnh sửa xe" : "Thêm xe mới"}
               </DialogTitle>
               <DialogDescription>
-                {editingCar ? 'Cập nhật thông tin xe' : 'Điền thông tin xe mới'}
+                {editingCar ? "Cập nhật thông tin xe" : "Điền thông tin xe mới"}
               </DialogDescription>
             </DialogHeader>
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -359,7 +395,9 @@ export default function CarManagement() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Loại nhiên liệu *</label>
+                  <label className="text-sm font-medium">
+                    Loại nhiên liệu *
+                  </label>
                   <Input
                     name="fuel_type"
                     value={formData.fuel_type}
@@ -369,7 +407,9 @@ export default function CarManagement() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Giá thuê/ngày (VNĐ) *</label>
+                  <label className="text-sm font-medium">
+                    Giá thuê/ngày (VNĐ) *
+                  </label>
                   <Input
                     name="price_per_day"
                     type="number"
@@ -399,7 +439,12 @@ export default function CarManagement() {
                 </div>
               </div>
               <div className="flex justify-end gap-2 pt-4">
-                <Button type="button" variant="outline" onClick={handleCloseDialog} disabled={saving}>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={handleCloseDialog}
+                  disabled={saving}
+                >
                   <X className="h-4 w-4 mr-2" />
                   Hủy
                 </Button>
@@ -412,7 +457,7 @@ export default function CarManagement() {
                   ) : (
                     <>
                       <Save className="h-4 w-4 mr-2" />
-                      {editingCar ? 'Cập nhật' : 'Thêm xe'}
+                      {editingCar ? "Cập nhật" : "Thêm xe"}
                     </>
                   )}
                 </Button>
@@ -434,14 +479,16 @@ export default function CarManagement() {
                     Xác nhận xóa xe
                   </AlertDialogTitle>
                   <AlertDialogDescription className="text-left">
-                    Bạn có chắc chắn muốn xóa xe <strong>"{deleteDialog.carName}"</strong>?
+                    Bạn có chắc chắn muốn xóa xe{" "}
+                    <strong>"{deleteDialog.carName}"</strong>?
                   </AlertDialogDescription>
                 </div>
               </div>
             </AlertDialogHeader>
             <div className="rounded-md bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 p-4">
               <p className="text-sm text-yellow-800 dark:text-yellow-200">
-                ⚠️ <strong>Cảnh báo:</strong> Hành động này không thể hoàn tác. Thông tin xe này sẽ bị xóa vĩnh viễn khỏi hệ thống.
+                ⚠️ <strong>Cảnh báo:</strong> Hành động này không thể hoàn tác.
+                Thông tin xe này sẽ bị xóa vĩnh viễn khỏi hệ thống.
               </p>
             </div>
             <AlertDialogFooter>
@@ -461,6 +508,5 @@ export default function CarManagement() {
         </AlertDialog>
       </PageContainer>
     </AdminLayout>
-  )
+  );
 }
-

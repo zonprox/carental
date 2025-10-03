@@ -1,35 +1,36 @@
-import { render, screen } from '@testing-library/react'
-import { describe, it, expect, vi } from 'vitest'
-import { BrowserRouter } from 'react-router-dom'
-import HomePage from './HomePage'
+import { render, screen } from "@testing-library/react";
+import { describe, it, expect, vi } from "vitest";
+import { BrowserRouter } from "react-router-dom";
+import HomePage from "./HomePage";
 
 // Mock fetch API
-global.fetch = vi.fn()
+global.fetch = vi.fn();
 
 const HomePageWithRouter = () => (
   <BrowserRouter>
     <HomePage />
   </BrowserRouter>
-)
+);
 
-describe('HomePage Component', () => {
+describe("HomePage Component", () => {
   beforeEach(() => {
-    fetch.mockClear()
+    fetch.mockClear();
     fetch.mockResolvedValue({
       ok: true,
-      json: async () => []
-    })
-  })
+      json: async () => [],
+    });
+  });
 
-  it('renders homepage without crashing', () => {
-    render(<HomePageWithRouter />)
-    expect(document.body).toBeInTheDocument()
-  })
+  it("renders homepage without crashing", () => {
+    render(<HomePageWithRouter />);
+    expect(document.body).toBeInTheDocument();
+  });
 
-  it('displays loading state initially', () => {
-    render(<HomePageWithRouter />)
+  it("displays loading state initially", () => {
+    render(<HomePageWithRouter />);
     // Kiểm tra loading state hoặc nội dung cơ bản
-    const pageContent = document.querySelector('main') || document.querySelector('div')
-    expect(pageContent).toBeInTheDocument()
-  })
-})
+    const pageContent =
+      document.querySelector("main") || document.querySelector("div");
+    expect(pageContent).toBeInTheDocument();
+  });
+});

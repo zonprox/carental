@@ -1,20 +1,20 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { ArrowUpRight } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ArrowUpRight } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 /**
  * StatCard - Reusable statistics card component
  * Used in Dashboard and other admin pages
  */
-export function StatCard({ 
-  title, 
-  value, 
-  label, 
-  delta, 
-  deltaType = 'neutral', 
-  icon: Icon, 
+export function StatCard({
+  title,
+  value,
+  label,
+  delta,
+  deltaType = "neutral",
+  icon: Icon,
   className,
-  ...props 
+  ...props
 }) {
   return (
     <Card className={cn("", className)} {...props}>
@@ -26,23 +26,22 @@ export function StatCard({
       </CardHeader>
       <CardContent>
         <div className="text-2xl font-bold text-foreground">{value}</div>
-        {label && (
-          <p className="text-xs text-muted-foreground">
-            {label}
-          </p>
-        )}
-        {delta && delta !== '0%' && (
-          <div className={cn(
-            "flex items-center pt-1 text-xs",
-            deltaType === 'increase' && 'text-emerald-500 dark:text-emerald-400',
-            deltaType === 'decrease' && 'text-rose-500 dark:text-rose-400',
-            deltaType === 'neutral' && 'text-muted-foreground'
-          )}>
+        {label && <p className="text-xs text-muted-foreground">{label}</p>}
+        {delta && delta !== "0%" && (
+          <div
+            className={cn(
+              "flex items-center pt-1 text-xs",
+              deltaType === "increase" &&
+                "text-emerald-500 dark:text-emerald-400",
+              deltaType === "decrease" && "text-rose-500 dark:text-rose-400",
+              deltaType === "neutral" && "text-muted-foreground",
+            )}
+          >
             <ArrowUpRight className="mr-1 h-3 w-3" />
             {delta}
           </div>
         )}
       </CardContent>
     </Card>
-  )
+  );
 }

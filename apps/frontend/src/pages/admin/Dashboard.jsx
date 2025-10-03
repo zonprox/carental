@@ -1,18 +1,26 @@
-import { useState, useEffect } from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { PageContainer, PageHeader } from '@/components/ui/page-header'
-import { StatCard } from '@/components/ui/stat-card'
-import { LoadingPage } from '@/components/ui/loading-spinner'
-import { ChartPlaceholder, FeaturePlaceholder } from '@/components/ui/chart-placeholder'
-import { 
-  Car, Users, DollarSign, TrendingUp, RefreshCw, Download, UserCheck,
-  BarChart3, Calendar, Clock, Star
-} from 'lucide-react'
-import AdminLayout from '@/components/admin/AdminLayout'
-import { t } from '@/locales'
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { PageContainer, PageHeader } from "@/components/ui/page-header";
+import { StatCard } from "@/components/ui/stat-card";
+import { LoadingPage } from "@/components/ui/loading-spinner";
+import {
+  ChartPlaceholder,
+  FeaturePlaceholder,
+} from "@/components/ui/chart-placeholder";
+import {
+  Car,
+  DollarSign,
+  TrendingUp,
+  RefreshCw,
+  Download,
+  UserCheck,
+  BarChart3,
+  Calendar,
+} from "lucide-react";
+import AdminLayout from "@/components/admin/AdminLayout";
+import { t } from "@/locales";
 
-const USE_MOCK_UI = false
+const USE_MOCK_UI = false;
 
 export default function Dashboard() {
   const [stats, setStats] = useState({
@@ -21,28 +29,31 @@ export default function Dashboard() {
     carsWithDriver: 0,
     totalUsers: 0,
     totalBookings: 0,
-    revenue: 0
-  })
-  const [loading, setLoading] = useState(true)
+    revenue: 0,
+  });
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchStats()
-  }, [])
+    fetchStats();
+  }, []);
 
   const fetchStats = async () => {
     try {
       const [carsRes] = await Promise.all([
-        fetch('/api/cars', {
+        fetch("/api/cars", {
           headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
-          }
-        })
-      ])
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }),
+      ]);
 
-      const cars = carsRes.ok ? await carsRes.json() : []
-      
+      const cars = carsRes.ok ? await carsRes.json() : [];
+
       // Calculate revenue from cars
-      const totalRevenue = cars.reduce((sum, car) => sum + (car.price_per_day || 0), 0)
+      const totalRevenue = cars.reduce(
+        (sum, car) => sum + (car.price_per_day || 0),
+        0,
+      );
 
       setStats({
         totalCars: cars.length,
@@ -50,82 +61,82 @@ export default function Dashboard() {
         carsWithDriver: USE_MOCK_UI ? Math.floor(cars.length * 0.4) : 0,
         totalUsers: USE_MOCK_UI ? 1 : 0,
         totalBookings: 0,
-        revenue: totalRevenue
-      })
+        revenue: totalRevenue,
+      });
     } catch (error) {
-      console.error('Error fetching stats:', error)
+      console.error("Error fetching stats:", error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const handleRefresh = () => {
-    setLoading(true)
-    fetchStats()
-  }
+    setLoading(true);
+    fetchStats();
+  };
 
   const handleExport = () => {
     // Placeholder for export functionality
-    console.log('Export data...')
-  }
+    console.log("Export data...");
+  };
 
   const statCards = [
     {
-      title: t('dashboard.stats.totalVehicles.title'),
-      label: t('dashboard.stats.totalVehicles.label'),
+      title: t("dashboard.stats.totalVehicles.title"),
+      label: t("dashboard.stats.totalVehicles.label"),
       value: stats.totalCars,
-      delta: stats.totalCars > 0 ? '+12%' : '0%',
-      deltaType: 'increase',
-      icon: Car
+      delta: stats.totalCars > 0 ? "+12%" : "0%",
+      deltaType: "increase",
+      icon: Car,
     },
     {
-      title: t('dashboard.stats.available.title'),
-      label: t('dashboard.stats.available.label'),
+      title: t("dashboard.stats.available.title"),
+      label: t("dashboard.stats.available.label"),
       value: stats.availableCars,
-      delta: stats.availableCars > 0 ? '+8%' : '0%',
-      deltaType: 'increase',
-      icon: Car
+      delta: stats.availableCars > 0 ? "+8%" : "0%",
+      deltaType: "increase",
+      icon: Car,
     },
     {
-      title: t('dashboard.stats.withDriver.title'),
-      label: t('dashboard.stats.withDriver.label'),
+      title: t("dashboard.stats.withDriver.title"),
+      label: t("dashboard.stats.withDriver.label"),
       value: stats.carsWithDriver,
-      delta: '0%',
-      deltaType: 'neutral',
-      icon: UserCheck
+      delta: "0%",
+      deltaType: "neutral",
+      icon: UserCheck,
     },
     {
-      title: t('dashboard.stats.bookings.title'),
-      label: t('dashboard.stats.bookings.label'),
+      title: t("dashboard.stats.bookings.title"),
+      label: t("dashboard.stats.bookings.label"),
       value: stats.totalBookings,
-      delta: '0%',
-      deltaType: 'neutral',
-      icon: TrendingUp
+      delta: "0%",
+      deltaType: "neutral",
+      icon: TrendingUp,
     },
     {
-      title: t('dashboard.stats.totalValue.title'),
-      label: t('dashboard.stats.totalValue.label'),
-      value: `${stats.revenue.toLocaleString('vi-VN')}đ`,
-      delta: stats.revenue > 0 ? '+5%' : '0%',
-      deltaType: 'increase',
-      icon: DollarSign
-    }
-  ]
+      title: t("dashboard.stats.totalValue.title"),
+      label: t("dashboard.stats.totalValue.label"),
+      value: `${stats.revenue.toLocaleString("vi-VN")}đ`,
+      delta: stats.revenue > 0 ? "+5%" : "0%",
+      deltaType: "increase",
+      icon: DollarSign,
+    },
+  ];
 
   if (loading) {
     return (
       <AdminLayout>
-        <LoadingPage text={t('dashboard.loading')} icon={RefreshCw} />
+        <LoadingPage text={t("dashboard.loading")} icon={RefreshCw} />
       </AdminLayout>
-    )
+    );
   }
 
   return (
     <AdminLayout>
       <PageContainer>
-        <PageHeader 
-          title={t('dashboard.title')}
-          description={t('dashboard.subtitle')}
+        <PageHeader
+          title={t("dashboard.title")}
+          description={t("dashboard.subtitle")}
         >
           <Button
             variant="outline"
@@ -134,15 +145,11 @@ export default function Dashboard() {
             disabled={loading}
           >
             <RefreshCw className="mr-2 h-4 w-4" />
-            {t('common.refresh')}
+            {t("common.refresh")}
           </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleExport}
-          >
+          <Button variant="outline" size="sm" onClick={handleExport}>
             <Download className="mr-2 h-4 w-4" />
-            {t('common.export')}
+            {t("common.export")}
           </Button>
         </PageHeader>
 
@@ -154,7 +161,7 @@ export default function Dashboard() {
               title={stat.title}
               value={stat.value}
               label={stat.label}
-              delta={`${stat.delta} ${t('dashboard.stats.deltaText')}`}
+              delta={`${stat.delta} ${t("dashboard.stats.deltaText")}`}
               deltaType={stat.deltaType}
               icon={stat.icon}
             />
@@ -166,15 +173,15 @@ export default function Dashboard() {
           <ChartPlaceholder
             className="col-span-4"
             type="line"
-            title={t('dashboard.charts.overview.title')}
-            description={t('dashboard.charts.overview.description')}
+            title={t("dashboard.charts.overview.title")}
+            description={t("dashboard.charts.overview.description")}
           />
 
           <ChartPlaceholder
             className="col-span-3"
             type="activity"
-            title={t('dashboard.charts.activity.title')}
-            description={t('dashboard.charts.activity.description')}
+            title={t("dashboard.charts.activity.title")}
+            description={t("dashboard.charts.activity.description")}
           />
         </div>
 
@@ -182,24 +189,23 @@ export default function Dashboard() {
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           <FeaturePlaceholder
             icon={BarChart3}
-            title={t('dashboard.charts.popular.title')}
-            description={t('dashboard.charts.popular.emptyDesc')}
+            title={t("dashboard.charts.popular.title")}
+            description={t("dashboard.charts.popular.emptyDesc")}
           />
 
           <FeaturePlaceholder
             icon={TrendingUp}
-            title={t('dashboard.charts.revenue.title')}
-            description={t('dashboard.charts.revenue.emptyDesc')}
+            title={t("dashboard.charts.revenue.title")}
+            description={t("dashboard.charts.revenue.emptyDesc")}
           />
 
           <FeaturePlaceholder
             icon={Calendar}
-            title={t('dashboard.charts.bookings.title')}
-            description={t('dashboard.charts.bookings.emptyDesc')}
+            title={t("dashboard.charts.bookings.title")}
+            description={t("dashboard.charts.bookings.emptyDesc")}
           />
         </div>
       </PageContainer>
     </AdminLayout>
-  )
+  );
 }
-

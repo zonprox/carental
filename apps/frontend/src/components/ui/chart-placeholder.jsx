@@ -1,27 +1,39 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { BarChart3, LineChart, PieChart, TrendingUp, Activity } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  BarChart3,
+  LineChart,
+  PieChart,
+  TrendingUp,
+  Activity,
+} from "lucide-react";
+import { cn } from "@/lib/utils";
 
 /**
  * ChartPlaceholder - Beautiful placeholder for charts
  * Used in admin dashboard for future chart implementations
  */
-export function ChartPlaceholder({ 
-  title, 
-  description, 
-  type = 'bar',
+export function ChartPlaceholder({
+  title,
+  description,
+  type = "bar",
   className,
-  ...props 
+  ...props
 }) {
   const iconMap = {
     bar: BarChart3,
     line: LineChart,
     pie: PieChart,
     trend: TrendingUp,
-    activity: Activity
-  }
-  
-  const Icon = iconMap[type] || BarChart3
+    activity: Activity,
+  };
+
+  const Icon = iconMap[type] || BarChart3;
 
   return (
     <Card className={cn("", className)} {...props}>
@@ -50,13 +62,19 @@ export function ChartPlaceholder({
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }
 
 /**
  * TablePlaceholder - Placeholder for data tables
  */
-export function TablePlaceholder({ title, description, rows = 5, className, ...props }) {
+export function TablePlaceholder({
+  title,
+  description,
+  rows = 5,
+  className,
+  ...props
+}) {
   return (
     <Card className={cn("", className)} {...props}>
       <CardHeader>
@@ -70,8 +88,8 @@ export function TablePlaceholder({ title, description, rows = 5, className, ...p
       <CardContent>
         <div className="space-y-3">
           {Array.from({ length: rows }).map((_, i) => (
-            <div 
-              key={i} 
+            <div
+              key={i}
               className="h-12 bg-muted/40 rounded animate-pulse"
               style={{ animationDelay: `${i * 0.1}s` }}
             />
@@ -82,19 +100,19 @@ export function TablePlaceholder({ title, description, rows = 5, className, ...p
         </p>
       </CardContent>
     </Card>
-  )
+  );
 }
 
 /**
  * FeaturePlaceholder - Placeholder for upcoming features
  */
-export function FeaturePlaceholder({ 
-  icon: Icon, 
-  title, 
-  description, 
+export function FeaturePlaceholder({
+  icon: Icon,
+  title,
+  description,
   comingSoon = true,
   className,
-  ...props 
+  ...props
 }) {
   return (
     <Card className={cn("", className)} {...props}>
@@ -122,5 +140,5 @@ export function FeaturePlaceholder({
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

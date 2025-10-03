@@ -1,13 +1,38 @@
-import { useState, useEffect } from 'react'
-import { Card, CardContent } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { Badge } from '@/components/ui/badge'
-import { PageContainer, PageHeader } from '@/components/ui/page-header'
-import { Plus, Edit, Trash2, Save, X, Users as UsersIcon, Shield, User, AlertCircle, Loader2, AlertTriangle } from 'lucide-react'
-import AdminLayout from '@/components/admin/AdminLayout'
-import { t } from '@/locales'
+import { useState, useEffect } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
+import { PageContainer, PageHeader } from "@/components/ui/page-header";
+import {
+  Plus,
+  Edit,
+  Trash2,
+  Save,
+  X,
+  Users as UsersIcon,
+  Shield,
+  User,
+  AlertCircle,
+  Loader2,
+  AlertTriangle,
+  Eye,
+  Calendar,
+  Mail,
+  Phone,
+  MapPin,
+  Hash,
+} from "lucide-react";
+import AdminLayout from "@/components/admin/AdminLayout";
+import { t } from "@/locales";
 import {
   Dialog,
   DialogContent,
@@ -15,7 +40,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
-} from '@/components/ui/dialog'
+} from "@/components/ui/dialog";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -25,303 +50,316 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from '@/components/ui/alert-dialog'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import { useToast } from '@/hooks/use-toast'
-import { userAPI } from '@/lib/api'
+} from "@/components/ui/alert-dialog";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { useToast } from "@/hooks/use-toast";
+import { userAPI } from "@/lib/api";
 
 export default function UserManagement() {
-  const { toast } = useToast()
-  const [users, setUsers] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [saving, setSaving] = useState(false)
-  const [editingUser, setEditingUser] = useState(null)
-  const [showDialog, setShowDialog] = useState(false)
-  const [deleteDialog, setDeleteDialog] = useState({ open: false, userId: null, userName: '' })
-  const [error, setError] = useState('')
-  const [validationErrors, setValidationErrors] = useState({})
+  const { toast } = useToast();
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [editingUser, setEditingUser] = useState(null);
+  const [showDialog, setShowDialog] = useState(false);
+  const [showDetailDialog, setShowDetailDialog] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [deleteDialog, setDeleteDialog] = useState({
+    open: false,
+    userId: null,
+    userName: "",
+  });
+  const [error, setError] = useState("");
+  const [validationErrors, setValidationErrors] = useState({});
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    phone: '',
-    address: '',
-    role: 'user'
-  })
+    name: "",
+    email: "",
+    password: "",
+    phone: "",
+    address: "",
+    role: "user",
+  });
 
   useEffect(() => {
-    fetchUsers()
-  }, [])
+    fetchUsers();
+  }, []);
 
   const fetchUsers = async () => {
     try {
-      setLoading(true)
-      setError('')
-      
-      const data = await userAPI.getAll()
-      
+      setLoading(true);
+      setError("");
+
+      const data = await userAPI.getAll();
+
       if (data.success) {
-        setUsers(data.data || [])
+        setUsers(data.data || []);
       } else {
-        throw new Error(data.message || 'Failed to fetch users')
+        throw new Error(data.message || "Failed to fetch users");
       }
     } catch (error) {
-      console.error('Error fetching users:', error)
-      const errorMsg = error.message || 'Không thể tải danh sách người dùng'
-      setError(errorMsg)
+      console.error("Error fetching users:", error);
+      const errorMsg = error.message || "Không thể tải danh sách người dùng";
+      setError(errorMsg);
       toast({
         variant: "destructive",
         title: "Lỗi tải dữ liệu",
         description: errorMsg,
-      })
+      });
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const validateForm = () => {
-    const errors = {}
-    
+    const errors = {};
+
     if (!formData.name.trim()) {
-      errors.name = 'Họ tên là bắt buộc'
-    }
-    
-    if (!formData.email.trim()) {
-      errors.email = 'Email là bắt buộc'
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      errors.email = 'Email không hợp lệ'
-    }
-    
-    if (!editingUser && !formData.password) {
-      errors.password = 'Mật khẩu là bắt buộc'
-    } else if (formData.password && formData.password.length < 6) {
-      errors.password = 'Mật khẩu phải có ít nhất 6 ký tự'
-    }
-    
-    if (!formData.role) {
-      errors.role = 'Vai trò là bắt buộc'
+      errors.name = "Họ tên là bắt buộc";
     }
 
-    setValidationErrors(errors)
-    return Object.keys(errors).length === 0
-  }
+    if (!formData.email.trim()) {
+      errors.email = "Email là bắt buộc";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      errors.email = "Email không hợp lệ";
+    }
+
+    if (!editingUser && !formData.password) {
+      errors.password = "Mật khẩu là bắt buộc";
+    } else if (formData.password && formData.password.length < 6) {
+      errors.password = "Mật khẩu phải có ít nhất 6 ký tự";
+    }
+
+    if (!formData.role) {
+      errors.role = "Vai trò là bắt buộc";
+    }
+
+    setValidationErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target
-    setFormData(prev => ({ ...prev, [name]: value }))
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
     // Clear validation error for this field
     if (validationErrors[name]) {
-      setValidationErrors(prev => {
-        const newErrors = { ...prev }
-        delete newErrors[name]
-        return newErrors
-      })
+      setValidationErrors((prev) => {
+        const newErrors = { ...prev };
+        delete newErrors[name];
+        return newErrors;
+      });
     }
-  }
+  };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    
+    e.preventDefault();
+
     if (!validateForm()) {
-      return
+      return;
     }
 
-    setSaving(true)
-    setError('')
-    
+    setSaving(true);
+    setError("");
+
     try {
       // Prepare data - only send changed fields for updates
-      const submitData = {}
-      
+      const submitData = {};
+
       if (editingUser) {
         // For updates, only send changed fields
         if (formData.name.trim() !== editingUser.name) {
-          submitData.name = formData.name.trim()
+          submitData.name = formData.name.trim();
         }
         if (formData.email.trim() !== editingUser.email) {
-          submitData.email = formData.email.trim()
+          submitData.email = formData.email.trim();
         }
-        if (formData.phone.trim() !== (editingUser.phone || '')) {
-          submitData.phone = formData.phone.trim() || null
+        if (formData.phone.trim() !== (editingUser.phone || "")) {
+          submitData.phone = formData.phone.trim() || null;
         }
-        if (formData.address.trim() !== (editingUser.address || '')) {
-          submitData.address = formData.address.trim() || null
+        if (formData.address.trim() !== (editingUser.address || "")) {
+          submitData.address = formData.address.trim() || null;
         }
         if (formData.role !== editingUser.role) {
-          submitData.role = formData.role
+          submitData.role = formData.role;
         }
         if (formData.password) {
-          submitData.password = formData.password
+          submitData.password = formData.password;
         }
       } else {
         // For new users, send all required fields
-        submitData.name = formData.name.trim()
-        submitData.email = formData.email.trim()
-        submitData.phone = formData.phone.trim() || null
-        submitData.address = formData.address.trim() || null
-        submitData.role = formData.role
+        submitData.name = formData.name.trim();
+        submitData.email = formData.email.trim();
+        submitData.phone = formData.phone.trim() || null;
+        submitData.address = formData.address.trim() || null;
+        submitData.role = formData.role;
         if (formData.password) {
-          submitData.password = formData.password
+          submitData.password = formData.password;
         }
       }
 
       const result = editingUser
         ? await userAPI.update(editingUser.id, submitData)
-        : await userAPI.create(submitData)
+        : await userAPI.create(submitData);
 
       if (result.success) {
         // Success - close dialog and refresh
-        handleCloseDialog()
-        await fetchUsers()
-        
+        handleCloseDialog();
+        await fetchUsers();
+
         // Show success toast
         toast({
           variant: "success",
           title: editingUser ? "Cập nhật thành công" : "Thêm thành công",
-          description: editingUser 
+          description: editingUser
             ? `Đã cập nhật thông tin người dùng "${formData.name}"`
             : `Đã thêm người dùng "${formData.name}" vào hệ thống`,
-        })
+        });
       } else {
-        throw new Error(result.message || 'Failed to save user')
+        throw new Error(result.message || "Failed to save user");
       }
     } catch (error) {
-      console.error('Error saving user:', error)
-      
+      console.error("Error saving user:", error);
+
       // Handle validation errors from backend
-      let errorMsg = 'Có lỗi xảy ra khi lưu thông tin người dùng'
-      if (error.message.includes('errors') || error.message.includes('validation')) {
-        errorMsg = 'Dữ liệu không hợp lệ. Vui lòng kiểm tra lại.'
+      let errorMsg = "Có lỗi xảy ra khi lưu thông tin người dùng";
+      if (
+        error.message.includes("errors") ||
+        error.message.includes("validation")
+      ) {
+        errorMsg = "Dữ liệu không hợp lệ. Vui lòng kiểm tra lại.";
       } else if (error.message) {
-        errorMsg = error.message
+        errorMsg = error.message;
       }
-      
-      setError(errorMsg)
+
+      setError(errorMsg);
       toast({
         variant: "destructive",
         title: "Lỗi lưu dữ liệu",
         description: errorMsg,
-      })
+      });
     } finally {
-      setSaving(false)
+      setSaving(false);
     }
-  }
+  };
 
   const openDeleteDialog = (id) => {
-    const user = users.find(u => u.id === id)
+    const user = users.find((u) => u.id === id);
     setDeleteDialog({
       open: true,
       userId: id,
-      userName: user ? user.name : 'người dùng này'
-    })
-  }
+      userName: user ? user.name : "người dùng này",
+    });
+  };
 
   const closeDeleteDialog = () => {
-    setDeleteDialog({ open: false, userId: null, userName: '' })
-  }
+    setDeleteDialog({ open: false, userId: null, userName: "" });
+  };
 
   const handleDelete = async () => {
-    const { userId, userName } = deleteDialog
-    
+    const { userId, userName } = deleteDialog;
+
     try {
-      const result = await userAPI.delete(userId)
+      const result = await userAPI.delete(userId);
 
       if (result.success) {
         toast({
           variant: "success",
           title: "Xóa thành công",
           description: `Đã xóa người dùng "${userName}" khỏi hệ thống`,
-        })
-        closeDeleteDialog()
-        handleCloseDialog() // Close edit dialog if open
-        await fetchUsers()
+        });
+        closeDeleteDialog();
+        handleCloseDialog(); // Close edit dialog if open
+        await fetchUsers();
       } else {
-        throw new Error(result.message || 'Failed to delete user')
+        throw new Error(result.message || "Failed to delete user");
       }
     } catch (error) {
-      console.error('Error deleting user:', error)
+      console.error("Error deleting user:", error);
       toast({
         variant: "destructive",
         title: "Lỗi xóa người dùng",
-        description: error.message || 'Không thể xóa người dùng',
-      })
-      closeDeleteDialog()
+        description: error.message || "Không thể xóa người dùng",
+      });
+      closeDeleteDialog();
     }
-  }
+  };
+
+  const handleViewDetails = (user) => {
+    setSelectedUser(user);
+    setShowDetailDialog(true);
+  };
 
   const handleEdit = (user) => {
-    setEditingUser(user)
+    setEditingUser(user);
     setFormData({
-      name: user.name || '',
-      email: user.email || '',
-      password: '',
-      phone: user.phone || '',
-      address: user.address || '',
-      role: user.role || 'user'
-    })
-    setError('')
-    setValidationErrors({})
-    setShowDialog(true)
-  }
+      name: user.name || "",
+      email: user.email || "",
+      password: "",
+      phone: user.phone || "",
+      address: user.address || "",
+      role: user.role || "user",
+    });
+    setError("");
+    setValidationErrors({});
+    setShowDialog(true);
+  };
 
   const handleAdd = () => {
-    setEditingUser(null)
+    setEditingUser(null);
     setFormData({
-      name: '',
-      email: '',
-      password: '',
-      phone: '',
-      address: '',
-      role: 'user'
-    })
-    setError('')
-    setValidationErrors({})
-    setShowDialog(true)
-  }
+      name: "",
+      email: "",
+      password: "",
+      phone: "",
+      address: "",
+      role: "user",
+    });
+    setError("");
+    setValidationErrors({});
+    setShowDialog(true);
+  };
 
   const handleCloseDialog = () => {
-    setShowDialog(false)
-    setEditingUser(null)
+    setShowDialog(false);
+    setEditingUser(null);
     setFormData({
-      name: '',
-      email: '',
-      password: '',
-      phone: '',
-      address: '',
-      role: 'user'
-    })
-    setError('')
-    setValidationErrors({})
-  }
+      name: "",
+      email: "",
+      password: "",
+      phone: "",
+      address: "",
+      role: "user",
+    });
+    setError("");
+    setValidationErrors({});
+  };
 
   // Calculate stats
   const stats = {
     total: users.length,
-    admins: users.filter(u => u.role === 'admin').length,
-    regularUsers: users.filter(u => u.role !== 'admin').length
-  }
+    admins: users.filter((u) => u.role === "admin").length,
+    regularUsers: users.filter((u) => u.role !== "admin").length,
+  };
 
   if (loading) {
     return (
       <AdminLayout>
         <div className="flex flex-col items-center justify-center h-96 gap-4">
           <Loader2 className="h-12 w-12 animate-spin text-primary" />
-          <p className="text-muted-foreground">Đang tải danh sách người dùng...</p>
+          <p className="text-muted-foreground">
+            Đang tải danh sách người dùng...
+          </p>
         </div>
       </AdminLayout>
-    )
+    );
   }
 
   return (
     <AdminLayout>
       <PageContainer>
-        <PageHeader 
-          title={t('users.title')}
-          description={t('users.subtitle')}
-        >
+        <PageHeader title={t("users.title")} description={t("users.subtitle")}>
           <Button onClick={handleAdd}>
             <Plus className="h-4 w-4 mr-2" />
-            {t('users.addNew')}
+            {t("users.addNew")}
           </Button>
         </PageHeader>
 
@@ -340,7 +378,7 @@ export default function UserManagement() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-muted-foreground">
-                    {t('users.stats.total')}
+                    {t("users.stats.total")}
                   </p>
                   <p className="text-3xl font-bold mt-1 text-foreground">
                     {stats.total}
@@ -353,13 +391,13 @@ export default function UserManagement() {
               </div>
             </CardContent>
           </Card>
-          
+
           <Card>
             <CardContent className="pt-6">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-muted-foreground">
-                    {t('users.stats.admins')}
+                    {t("users.stats.admins")}
                   </p>
                   <p className="text-3xl font-bold mt-1 text-foreground">
                     {stats.admins}
@@ -372,13 +410,13 @@ export default function UserManagement() {
               </div>
             </CardContent>
           </Card>
-          
+
           <Card>
             <CardContent className="pt-6">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-muted-foreground">
-                    {t('users.stats.users')}
+                    {t("users.stats.users")}
                   </p>
                   <p className="text-3xl font-bold mt-1 text-foreground">
                     {stats.regularUsers}
@@ -400,37 +438,40 @@ export default function UserManagement() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="text-foreground font-semibold">
-                      {t('users.table.name')}
+                    <TableHead className="text-foreground font-semibold w-16">
+                      ID
                     </TableHead>
                     <TableHead className="text-foreground font-semibold">
-                      {t('users.table.email')}
+                      {t("users.table.name")}
                     </TableHead>
                     <TableHead className="text-foreground font-semibold">
-                      {t('users.table.phone')}
+                      {t("users.table.email")}
                     </TableHead>
                     <TableHead className="text-foreground font-semibold">
-                      {t('users.table.address')}
+                      {t("users.table.phone")}
                     </TableHead>
                     <TableHead className="text-foreground font-semibold">
-                      {t('users.table.role')}
+                      {t("users.table.address")}
                     </TableHead>
                     <TableHead className="text-foreground font-semibold">
-                      {t('users.table.createdAt')}
+                      {t("users.table.role")}
+                    </TableHead>
+                    <TableHead className="text-foreground font-semibold">
+                      {t("users.table.createdAt")}
                     </TableHead>
                     <TableHead className="text-right text-foreground font-semibold">
-                      {t('users.table.actions')}
+                      {t("users.table.actions")}
                     </TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {users.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={7} className="text-center py-12">
+                      <TableCell colSpan={8} className="text-center py-12">
                         <div className="flex flex-col items-center gap-2">
                           <UsersIcon className="h-12 w-12 text-muted-foreground opacity-50" />
                           <p className="text-muted-foreground font-medium">
-                            {t('users.empty')}
+                            {t("users.empty")}
                           </p>
                           <p className="text-sm text-muted-foreground">
                             Nhấn "Thêm người dùng" để tạo người dùng mới
@@ -441,43 +482,72 @@ export default function UserManagement() {
                   ) : (
                     users.map((user) => (
                       <TableRow key={user.id} className="hover:bg-muted/50">
-                        <TableCell className="font-medium">{user.name}</TableCell>
+                        <TableCell className="font-mono text-sm text-muted-foreground">
+                          #{user.id}
+                        </TableCell>
+                        <TableCell className="font-medium">
+                          {user.name}
+                        </TableCell>
                         <TableCell>{user.email}</TableCell>
                         <TableCell>
-                          {user.phone || <span className="text-muted-foreground">—</span>}
+                          {user.phone || (
+                            <span className="text-muted-foreground">—</span>
+                          )}
                         </TableCell>
                         <TableCell className="max-w-xs truncate">
-                          {user.address || <span className="text-muted-foreground">—</span>}
+                          {user.address || (
+                            <span className="text-muted-foreground">—</span>
+                          )}
                         </TableCell>
                         <TableCell>
-                          <Badge 
+                          <Badge
                             variant="outline"
                             className={
-                              user.role === 'admin' 
-                                ? 'border-red-200 bg-red-50 text-red-700 dark:border-red-800 dark:bg-red-950 dark:text-red-300' 
-                                : user.role === 'manager'
-                                ? 'border-blue-200 bg-blue-50 text-blue-700 dark:border-blue-800 dark:bg-blue-950 dark:text-blue-300'
-                                : 'border-gray-200 bg-gray-50 text-gray-700 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300'
+                              user.role === "admin"
+                                ? "border-red-200 bg-red-50 text-red-700 dark:border-red-800 dark:bg-red-950 dark:text-red-300"
+                                : user.role === "manager"
+                                  ? "border-blue-200 bg-blue-50 text-blue-700 dark:border-blue-800 dark:bg-blue-950 dark:text-blue-300"
+                                  : "border-gray-200 bg-gray-50 text-gray-700 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300"
                             }
                           >
-                            {user.role === 'admin' ? (
-                              <><Shield className="h-3 w-3 mr-1" />Quản trị</>
-                            ) : user.role === 'manager' ? (
-                              <><Shield className="h-3 w-3 mr-1" />Nhân viên</>
+                            {user.role === "admin" ? (
+                              <>
+                                <Shield className="h-3 w-3 mr-1" />
+                                Quản trị
+                              </>
+                            ) : user.role === "manager" ? (
+                              <>
+                                <Shield className="h-3 w-3 mr-1" />
+                                Nhân viên
+                              </>
                             ) : (
-                              <><User className="h-3 w-3 mr-1" />Người dùng</>
+                              <>
+                                <User className="h-3 w-3 mr-1" />
+                                Người dùng
+                              </>
                             )}
                           </Badge>
                         </TableCell>
                         <TableCell className="text-sm text-muted-foreground">
-                          {new Date(user.created_at).toLocaleDateString('vi-VN', {
-                            year: 'numeric',
-                            month: '2-digit',
-                            day: '2-digit'
-                          })}
+                          {new Date(user.created_at).toLocaleDateString(
+                            "vi-VN",
+                            {
+                              year: "numeric",
+                              month: "2-digit",
+                              day: "2-digit",
+                            },
+                          )}
                         </TableCell>
                         <TableCell className="text-right">
                           <div className="flex justify-end gap-2">
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              onClick={() => handleViewDetails(user)}
+                              title="Xem chi tiết"
+                            >
+                              <Eye className="h-4 w-4" />
+                            </Button>
                             <Button
                               size="sm"
                               variant="outline"
@@ -505,17 +575,188 @@ export default function UserManagement() {
           </CardContent>
         </Card>
 
+        {/* User Detail Dialog */}
+        <Dialog open={showDetailDialog} onOpenChange={setShowDetailDialog}>
+          <DialogContent className="max-w-2xl">
+            <DialogHeader>
+              <DialogTitle className="text-xl flex items-center gap-2">
+                <User className="h-5 w-5" />
+                Chi tiết người dùng
+              </DialogTitle>
+              <DialogDescription>
+                Thông tin chi tiết về người dùng trong hệ thống
+              </DialogDescription>
+            </DialogHeader>
+
+            {selectedUser && (
+              <div className="space-y-6">
+                {/* User Avatar & Basic Info */}
+                <div className="flex items-center gap-4 p-4 bg-muted/50 rounded-lg">
+                  <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center">
+                    <User className="h-8 w-8 text-primary" />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-lg font-semibold">
+                      {selectedUser.name}
+                    </h3>
+                    <p className="text-sm text-muted-foreground">
+                      {selectedUser.email}
+                    </p>
+                    <Badge
+                      variant="outline"
+                      className={`mt-1 ${
+                        selectedUser.role === "admin"
+                          ? "border-red-200 bg-red-50 text-red-700 dark:border-red-800 dark:bg-red-950 dark:text-red-300"
+                          : selectedUser.role === "manager"
+                            ? "border-blue-200 bg-blue-50 text-blue-700 dark:border-blue-800 dark:bg-blue-950 dark:text-blue-300"
+                            : "border-gray-200 bg-gray-50 text-gray-700 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300"
+                      }`}
+                    >
+                      {selectedUser.role === "admin" ? (
+                        <>
+                          <Shield className="h-3 w-3 mr-1" />
+                          Quản trị viên
+                        </>
+                      ) : selectedUser.role === "manager" ? (
+                        <>
+                          <Shield className="h-3 w-3 mr-1" />
+                          Nhân viên
+                        </>
+                      ) : (
+                        <>
+                          <User className="h-3 w-3 mr-1" />
+                          Người dùng
+                        </>
+                      )}
+                    </Badge>
+                  </div>
+                </div>
+
+                {/* Detailed Information */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-3 p-3 border rounded-lg">
+                      <Hash className="h-4 w-4 text-muted-foreground" />
+                      <div>
+                        <p className="text-sm font-medium">ID người dùng</p>
+                        <p className="text-sm text-muted-foreground font-mono">
+                          #{selectedUser.id}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-3 p-3 border rounded-lg">
+                      <Mail className="h-4 w-4 text-muted-foreground" />
+                      <div>
+                        <p className="text-sm font-medium">Email</p>
+                        <p className="text-sm text-muted-foreground">
+                          {selectedUser.email}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-3 p-3 border rounded-lg">
+                      <Phone className="h-4 w-4 text-muted-foreground" />
+                      <div>
+                        <p className="text-sm font-medium">Số điện thoại</p>
+                        <p className="text-sm text-muted-foreground">
+                          {selectedUser.phone || "Chưa cập nhật"}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <div className="flex items-start gap-3 p-3 border rounded-lg">
+                      <MapPin className="h-4 w-4 text-muted-foreground mt-0.5" />
+                      <div>
+                        <p className="text-sm font-medium">Địa chỉ</p>
+                        <p className="text-sm text-muted-foreground">
+                          {selectedUser.address || "Chưa cập nhật"}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-3 p-3 border rounded-lg">
+                      <Calendar className="h-4 w-4 text-muted-foreground" />
+                      <div>
+                        <p className="text-sm font-medium">Ngày tạo</p>
+                        <p className="text-sm text-muted-foreground">
+                          {new Date(selectedUser.created_at).toLocaleDateString(
+                            "vi-VN",
+                            {
+                              weekday: "long",
+                              year: "numeric",
+                              month: "long",
+                              day: "numeric",
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            },
+                          )}
+                        </p>
+                      </div>
+                    </div>
+
+                    {selectedUser.updated_at && (
+                      <div className="flex items-center gap-3 p-3 border rounded-lg">
+                        <Calendar className="h-4 w-4 text-muted-foreground" />
+                        <div>
+                          <p className="text-sm font-medium">
+                            Cập nhật lần cuối
+                          </p>
+                          <p className="text-sm text-muted-foreground">
+                            {new Date(
+                              selectedUser.updated_at,
+                            ).toLocaleDateString("vi-VN", {
+                              weekday: "long",
+                              year: "numeric",
+                              month: "long",
+                              day: "numeric",
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            })}
+                          </p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            <DialogFooter>
+              <Button
+                variant="outline"
+                onClick={() => setShowDetailDialog(false)}
+              >
+                Đóng
+              </Button>
+              {selectedUser && (
+                <Button
+                  onClick={() => {
+                    setShowDetailDialog(false);
+                    handleEdit(selectedUser);
+                  }}
+                >
+                  <Edit className="h-4 w-4 mr-2" />
+                  Chỉnh sửa
+                </Button>
+              )}
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
         {/* Add/Edit User Dialog */}
         <Dialog open={showDialog} onOpenChange={setShowDialog}>
           <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle className="text-xl">
-                {editingUser ? 'Chỉnh sửa người dùng' : 'Thêm người dùng mới'}
+                {editingUser ? "Chỉnh sửa người dùng" : "Thêm người dùng mới"}
               </DialogTitle>
               <DialogDescription>
-                {editingUser 
-                  ? 'Cập nhật thông tin người dùng trong hệ thống' 
-                  : 'Tạo tài khoản người dùng mới trong hệ thống'}
+                {editingUser
+                  ? "Cập nhật thông tin người dùng trong hệ thống"
+                  : "Tạo tài khoản người dùng mới trong hệ thống"}
               </DialogDescription>
             </DialogHeader>
 
@@ -539,10 +780,12 @@ export default function UserManagement() {
                     onChange={handleInputChange}
                     placeholder="Nguyễn Văn A"
                     disabled={saving}
-                    className={validationErrors.name ? 'border-red-500' : ''}
+                    className={validationErrors.name ? "border-red-500" : ""}
                   />
                   {validationErrors.name && (
-                    <p className="text-xs text-red-500">{validationErrors.name}</p>
+                    <p className="text-xs text-red-500">
+                      {validationErrors.name}
+                    </p>
                   )}
                 </div>
 
@@ -558,29 +801,40 @@ export default function UserManagement() {
                     onChange={handleInputChange}
                     placeholder="email@example.com"
                     disabled={saving}
-                    className={validationErrors.email ? 'border-red-500' : ''}
+                    className={validationErrors.email ? "border-red-500" : ""}
                   />
                   {validationErrors.email && (
-                    <p className="text-xs text-red-500">{validationErrors.email}</p>
+                    <p className="text-xs text-red-500">
+                      {validationErrors.email}
+                    </p>
                   )}
                 </div>
 
                 {/* Mật khẩu */}
                 <div className="space-y-2">
                   <label className="text-sm font-medium">
-                    Mật khẩu {!editingUser && <span className="text-red-500">*</span>}
+                    Mật khẩu{" "}
+                    {!editingUser && <span className="text-red-500">*</span>}
                   </label>
                   <Input
                     name="password"
                     type="password"
                     value={formData.password}
                     onChange={handleInputChange}
-                    placeholder={editingUser ? 'Để trống nếu không đổi' : 'Tối thiểu 6 ký tự'}
+                    placeholder={
+                      editingUser
+                        ? "Để trống nếu không đổi"
+                        : "Tối thiểu 6 ký tự"
+                    }
                     disabled={saving}
-                    className={validationErrors.password ? 'border-red-500' : ''}
+                    className={
+                      validationErrors.password ? "border-red-500" : ""
+                    }
                   />
                   {validationErrors.password && (
-                    <p className="text-xs text-red-500">{validationErrors.password}</p>
+                    <p className="text-xs text-red-500">
+                      {validationErrors.password}
+                    </p>
                   )}
                   {editingUser && (
                     <p className="text-xs text-muted-foreground">
@@ -599,10 +853,12 @@ export default function UserManagement() {
                     onChange={handleInputChange}
                     placeholder="0912345678"
                     disabled={saving}
-                    className={validationErrors.phone ? 'border-red-500' : ''}
+                    className={validationErrors.phone ? "border-red-500" : ""}
                   />
                   {validationErrors.phone && (
-                    <p className="text-xs text-red-500">{validationErrors.phone}</p>
+                    <p className="text-xs text-red-500">
+                      {validationErrors.phone}
+                    </p>
                   )}
                 </div>
 
@@ -615,10 +871,12 @@ export default function UserManagement() {
                     onChange={handleInputChange}
                     placeholder="Số nhà, đường, phường/xã, quận/huyện, tỉnh/thành phố"
                     disabled={saving}
-                    className={validationErrors.address ? 'border-red-500' : ''}
+                    className={validationErrors.address ? "border-red-500" : ""}
                   />
                   {validationErrors.address && (
-                    <p className="text-xs text-red-500">{validationErrors.address}</p>
+                    <p className="text-xs text-red-500">
+                      {validationErrors.address}
+                    </p>
                   )}
                 </div>
 
@@ -632,14 +890,16 @@ export default function UserManagement() {
                     value={formData.role}
                     onChange={handleInputChange}
                     disabled={saving}
-                    className={`flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${validationErrors.role ? 'border-red-500' : ''}`}
+                    className={`flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${validationErrors.role ? "border-red-500" : ""}`}
                   >
                     <option value="user">Người dùng</option>
                     <option value="manager">Nhân viên</option>
                     <option value="admin">Quản trị viên</option>
                   </select>
                   {validationErrors.role && (
-                    <p className="text-xs text-red-500">{validationErrors.role}</p>
+                    <p className="text-xs text-red-500">
+                      {validationErrors.role}
+                    </p>
                   )}
                 </div>
               </div>
@@ -647,9 +907,9 @@ export default function UserManagement() {
               <DialogFooter className="flex flex-col sm:flex-row gap-2 pt-4">
                 <div className="flex-1">
                   {editingUser && (
-                    <Button 
-                      type="button" 
-                      variant="destructive" 
+                    <Button
+                      type="button"
+                      variant="destructive"
                       onClick={() => openDeleteDialog(editingUser.id)}
                       disabled={saving}
                       className="w-full sm:w-auto"
@@ -660,9 +920,9 @@ export default function UserManagement() {
                   )}
                 </div>
                 <div className="flex gap-2 justify-end">
-                  <Button 
-                    type="button" 
-                    variant="outline" 
+                  <Button
+                    type="button"
+                    variant="outline"
                     onClick={handleCloseDialog}
                     disabled={saving}
                   >
@@ -678,7 +938,7 @@ export default function UserManagement() {
                     ) : (
                       <>
                         <Save className="h-4 w-4 mr-2" />
-                        {editingUser ? 'Cập nhật' : 'Thêm người dùng'}
+                        {editingUser ? "Cập nhật" : "Thêm người dùng"}
                       </>
                     )}
                   </Button>
@@ -701,14 +961,16 @@ export default function UserManagement() {
                     Xác nhận xóa người dùng
                   </AlertDialogTitle>
                   <AlertDialogDescription className="text-left">
-                    Bạn có chắc chắn muốn xóa người dùng <strong>"{deleteDialog.userName}"</strong>?
+                    Bạn có chắc chắn muốn xóa người dùng{" "}
+                    <strong>"{deleteDialog.userName}"</strong>?
                   </AlertDialogDescription>
                 </div>
               </div>
             </AlertDialogHeader>
             <div className="rounded-md bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 p-4">
               <p className="text-sm text-yellow-800 dark:text-yellow-200">
-                ⚠️ <strong>Cảnh báo:</strong> Hành động này không thể hoàn tác. Tất cả dữ liệu liên quan đến người dùng này sẽ bị xóa vĩnh viễn.
+                ⚠️ <strong>Cảnh báo:</strong> Hành động này không thể hoàn tác.
+                Tất cả dữ liệu liên quan đến người dùng này sẽ bị xóa vĩnh viễn.
               </p>
             </div>
             <AlertDialogFooter>
@@ -728,5 +990,5 @@ export default function UserManagement() {
         </AlertDialog>
       </PageContainer>
     </AdminLayout>
-  )
+  );
 }

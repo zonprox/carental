@@ -71,6 +71,14 @@
       "role": "user",
       "created_at": "2024-06-18T13:25:15.000Z",
       "updated_at": "2024-06-18T13:25:15.000Z"
+    },
+    {
+      "id": 7,
+      "email": "tesst",
+      "password_hash": "test123@test.com",
+      "role": "$2a$10$fpM9JNxNn.jWzBQ2.pQL8OrgC70qHA/kdaBlJNJDKc6XbG/vP3kWG",
+      "created_at": "2025-10-03T14:03:00.533Z",
+      "updated_at": "2025-10-03T14:03:00.534Z"
     }
   ],
   "cars": [

@@ -1,76 +1,82 @@
-import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Car, ArrowLeft } from 'lucide-react'
-import { t } from '@/locales'
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Car, ArrowLeft } from "lucide-react";
+import { t } from "@/locales";
 
 export default function Login() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState('')
-  const navigate = useNavigate()
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   // Redirect if already logged in
   useEffect(() => {
-    const token = localStorage.getItem('token')
-    const userStr = localStorage.getItem('user')
-    
+    const token = localStorage.getItem("token");
+    const userStr = localStorage.getItem("user");
+
     if (token && userStr) {
       try {
-        const user = JSON.parse(userStr)
+        const user = JSON.parse(userStr);
         // Redirect based on role
-        if (user.role === 'admin') {
-          navigate('/admin/dashboard', { replace: true })
+        if (user.role === "admin") {
+          navigate("/admin/dashboard", { replace: true });
         } else {
-          navigate('/user/dashboard', { replace: true })
+          navigate("/user/dashboard", { replace: true });
         }
-      } catch (error) {
+      } catch (_error) {
         // If parsing fails, clear invalid data
-        localStorage.removeItem('token')
-        localStorage.removeItem('user')
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
       }
     }
-  }, [navigate])
+  }, [navigate]);
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    setLoading(true)
-    setError('')
+    e.preventDefault();
+    setLoading(true);
+    setError("");
 
     try {
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ email, password }),
-      })
+      });
 
-      const data = await response.json()
+      const data = await response.json();
 
       if (response.ok) {
         // Store auth data
-        localStorage.setItem('token', data.token)
-        localStorage.setItem('user', JSON.stringify(data.user))
-        
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("user", JSON.stringify(data.user));
+
         // Auto redirect based on user role
-        if (data.user.role === 'admin') {
-          navigate('/admin/dashboard')
+        if (data.user.role === "admin") {
+          navigate("/admin/dashboard");
         } else {
-          navigate('/dashboard')
+          navigate("/dashboard");
         }
       } else {
-        setError(data.message || t('auth.errors.invalidCredentials'))
+        setError(data.message || t("auth.errors.invalidCredentials"));
       }
-    } catch (error) {
-      setError(t('auth.errors.networkError'))
+    } catch (_error) {
+      setError(t("auth.errors.networkError"));
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-indigo-50 dark:from-background dark:via-background dark:to-background p-4">
@@ -79,12 +85,14 @@ export default function Login() {
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-2 text-primary">
             <Car className="h-8 w-8" />
-            <span className="text-2xl font-bold text-foreground">CarRental</span>
+            <span className="text-2xl font-bold text-foreground">
+              CarRental
+            </span>
           </div>
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => navigate('/')}
+            onClick={() => navigate("/")}
             className="gap-2"
           >
             <ArrowLeft className="h-4 w-4" />
@@ -96,7 +104,7 @@ export default function Login() {
         <Card className="shadow-xl border-border">
           <CardHeader className="space-y-1">
             <CardTitle className="text-2xl font-bold text-center">
-              {t('auth.login.title')}
+              {t("auth.login.title")}
             </CardTitle>
             <CardDescription className="text-center">
               Nhập thông tin để đăng nhập
@@ -118,7 +126,7 @@ export default function Login() {
                   required
                 />
               </div>
-              
+
               <div className="space-y-2">
                 <Input
                   id="password"
@@ -140,12 +148,14 @@ export default function Login() {
               )}
 
               <Button className="w-full" disabled={loading}>
-                {loading ? t('auth.login.logging') : t('auth.login.loginButton')}
+                {loading
+                  ? t("auth.login.logging")
+                  : t("auth.login.loginButton")}
               </Button>
             </form>
 
             <div className="mt-6 text-center text-sm text-muted-foreground">
-              Chưa có tài khoản?{' '}
+              Chưa có tài khoản?{" "}
               <a
                 href="/register"
                 className="text-blue-600 hover:text-blue-700 font-medium hover:underline"
@@ -157,6 +167,5 @@ export default function Login() {
         </Card>
       </div>
     </div>
-  )
+  );
 }
-

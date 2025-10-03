@@ -1,97 +1,103 @@
-import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Car, ArrowLeft } from 'lucide-react'
-import { t } from '@/locales'
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Car, ArrowLeft } from "lucide-react";
+import { t } from "@/locales";
 
 export default function Register() {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-    phone: '',
-    address: ''
-  })
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState('')
-  const navigate = useNavigate()
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    phone: "",
+    address: "",
+  });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   // Redirect if already logged in
   useEffect(() => {
-    const token = localStorage.getItem('token')
-    const userStr = localStorage.getItem('user')
-    
+    const token = localStorage.getItem("token");
+    const userStr = localStorage.getItem("user");
+
     if (token && userStr) {
       try {
-        const user = JSON.parse(userStr)
+        const user = JSON.parse(userStr);
         // Redirect based on role
-        if (user.role === 'admin') {
-          navigate('/admin/dashboard', { replace: true })
+        if (user.role === "admin") {
+          navigate("/admin/dashboard", { replace: true });
         } else {
-          navigate('/user/dashboard', { replace: true })
+          navigate("/user/dashboard", { replace: true });
         }
-      } catch (error) {
+      } catch (_error) {
         // If parsing fails, clear invalid data
-        localStorage.removeItem('token')
-        localStorage.removeItem('user')
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
       }
     }
-  }, [navigate])
+  }, [navigate]);
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target
-    setFormData(prev => ({
+    const { name, value } = e.target;
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
-    }))
-  }
+      [name]: value,
+    }));
+  };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    setLoading(true)
-    setError('')
+    e.preventDefault();
+    setLoading(true);
+    setError("");
 
     // Validate password match
     if (formData.password !== formData.confirmPassword) {
-      setError(t('auth.errors.passwordMismatch'))
-      setLoading(false)
-      return
+      setError(t("auth.errors.passwordMismatch"));
+      setLoading(false);
+      return;
     }
 
     try {
-      const response = await fetch('/api/auth/register', {
-        method: 'POST',
+      const response = await fetch("/api/auth/register", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           name: formData.name,
           email: formData.email,
           password: formData.password,
           phone: formData.phone,
-          address: formData.address
+          address: formData.address,
         }),
-      })
+      });
 
-      const data = await response.json()
+      const data = await response.json();
 
       if (response.ok) {
         // Redirect to login page after successful registration
-        navigate('/login', { 
-          state: { message: 'Đăng ký thành công! Vui lòng đăng nhập.' }
-        })
+        navigate("/login", {
+          state: { message: "Đăng ký thành công! Vui lòng đăng nhập." },
+        });
       } else {
-        setError(data.message || t('auth.errors.networkError'))
+        setError(data.message || t("auth.errors.networkError"));
       }
-    } catch (error) {
-      setError(t('auth.errors.networkError'))
+    } catch (_error) {
+      setError(t("auth.errors.networkError"));
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 via-white to-emerald-50 dark:from-background dark:via-background dark:to-background p-4">
@@ -100,12 +106,14 @@ export default function Register() {
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-2 text-primary">
             <Car className="h-8 w-8" />
-            <span className="text-2xl font-bold text-foreground">CarRental</span>
+            <span className="text-2xl font-bold text-foreground">
+              CarRental
+            </span>
           </div>
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => navigate('/')}
+            onClick={() => navigate("/")}
             className="gap-2"
           >
             <ArrowLeft className="h-4 w-4" />
@@ -117,7 +125,7 @@ export default function Register() {
         <Card className="shadow-xl border-border">
           <CardHeader className="space-y-1">
             <CardTitle className="text-2xl font-bold text-center">
-              {t('auth.register.title')}
+              {t("auth.register.title")}
             </CardTitle>
             <CardDescription className="text-center">
               Tạo tài khoản mới
@@ -221,23 +229,24 @@ export default function Register() {
               )}
 
               <Button className="w-full" disabled={loading}>
-                {loading ? t('auth.register.registering') : t('auth.register.registerButton')}
+                {loading
+                  ? t("auth.register.registering")
+                  : t("auth.register.registerButton")}
               </Button>
             </form>
 
             <div className="mt-6 text-center text-sm text-muted-foreground">
-              {t('auth.register.hasAccount')}{' '}
+              {t("auth.register.hasAccount")}{" "}
               <a
                 href="/login"
                 className="text-green-600 hover:text-green-700 font-medium hover:underline"
               >
-                {t('auth.register.loginLink')}
+                {t("auth.register.loginLink")}
               </a>
             </div>
           </CardContent>
         </Card>
       </div>
     </div>
-  )
+  );
 }
-

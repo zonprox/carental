@@ -1,12 +1,12 @@
-import { Routes, Route } from 'react-router-dom'
-import HomePage from './pages/HomePage'
-import Login from './pages/auth/Login'
-import Register from './pages/auth/Register'
-import UserDashboard from './pages/user/Dashboard'
-import AdminDashboard from './pages/admin/Dashboard'
-import CarManagement from './pages/admin/CarManagement'
-import UserManagement from './pages/admin/UserManagement'
-import { Toaster } from './components/ui/toaster'
+import { Routes, Route } from "react-router-dom";
+import HomePage from "./pages/HomePage";
+import Login from "./pages/auth/Login";
+import Register from "./pages/auth/Register";
+import UserDashboard from "./pages/user/Dashboard";
+import AdminDashboard from "./pages/admin/Dashboard";
+import CarManagement from "./pages/admin/CarManagement";
+import UserManagement from "./pages/admin/UserManagement";
+import { Toaster } from "./components/ui/toaster";
 
 function App() {
   return (
@@ -22,7 +22,7 @@ function App() {
       </Routes>
       <Toaster />
     </div>
-  )
+  );
 }
 
-export default App
+export default App;

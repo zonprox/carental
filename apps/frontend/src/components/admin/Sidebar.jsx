@@ -1,20 +1,20 @@
-import { Link, useLocation } from 'react-router-dom'
-import { Car, Users, LayoutDashboard, Menu, X } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { useState } from 'react'
-import { cn } from '@/lib/utils'
-import { t } from '@/locales'
-import UserMenu from './UserMenu'
+import { Link, useLocation } from "react-router-dom";
+import { Car, Users, LayoutDashboard, Menu, X } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import { cn } from "@/lib/utils";
+import { t } from "@/locales";
+import UserMenu from "./UserMenu";
 
 const navigation = [
-  { name: t('nav.dashboard'), href: '/admin/dashboard', icon: LayoutDashboard },
-  { name: t('nav.vehicles'), href: '/admin/cars', icon: Car },
-  { name: t('nav.users'), href: '/admin/users', icon: Users },
-]
+  { name: t("nav.dashboard"), href: "/admin/dashboard", icon: LayoutDashboard },
+  { name: t("nav.vehicles"), href: "/admin/cars", icon: Car },
+  { name: t("nav.users"), href: "/admin/users", icon: Users },
+];
 
 export default function Sidebar({ onLogout }) {
-  const location = useLocation()
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const location = useLocation();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
     <>
@@ -29,7 +29,11 @@ export default function Sidebar({ onLogout }) {
           size="sm"
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
         >
-          {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          {isMobileMenuOpen ? (
+            <X className="h-5 w-5" />
+          ) : (
+            <Menu className="h-5 w-5" />
+          )}
         </Button>
       </div>
 
@@ -37,7 +41,7 @@ export default function Sidebar({ onLogout }) {
       <div
         className={cn(
           "fixed inset-y-0 left-0 z-40 w-64 bg-card border-r admin-sidebar transform transition-transform duration-200 ease-in-out lg:translate-x-0",
-          isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
+          isMobileMenuOpen ? "translate-x-0" : "-translate-x-full",
         )}
       >
         <div className="flex flex-col h-full">
@@ -53,8 +57,8 @@ export default function Sidebar({ onLogout }) {
           {/* Navigation */}
           <nav className="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
             {navigation.map((item) => {
-              const isActive = location.pathname === item.href
-              const Icon = item.icon
+              const isActive = location.pathname === item.href;
+              const Icon = item.icon;
               return (
                 <Link
                   key={item.name}
@@ -64,33 +68,33 @@ export default function Sidebar({ onLogout }) {
                     "flex items-center space-x-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
                     isActive
                       ? "bg-primary/10 text-primary dark:bg-primary/20"
-                      : "text-foreground/70 hover:bg-accent hover:text-foreground"
+                      : "text-foreground/70 hover:bg-accent hover:text-foreground",
                   )}
                 >
                   <Icon className="h-5 w-5" />
                   <span>{item.name}</span>
                 </Link>
-              )
+              );
             })}
           </nav>
 
           {/* Footer */}
           <div className="border-t px-3 py-4">
-            <UserMenu 
+            <UserMenu
               user={(() => {
-                const userData = localStorage.getItem('user')
+                const userData = localStorage.getItem("user");
                 if (userData) {
                   try {
-                    return JSON.parse(userData)
+                    return JSON.parse(userData);
                   } catch (error) {
-                    console.error('Error parsing user data:', error)
+                    console.error("Error parsing user data:", error);
                   }
                 }
                 return {
-                  name: 'Quản Trị Viên',
-                  email: 'admin@carental.com',
-                  avatar: null
-                }
+                  name: "Quản Trị Viên",
+                  email: "admin@carental.com",
+                  avatar: null,
+                };
               })()}
               onLogout={onLogout}
             />
@@ -106,6 +110,5 @@ export default function Sidebar({ onLogout }) {
         />
       )}
     </>
-  )
+  );
 }
-
