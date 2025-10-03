@@ -130,17 +130,39 @@ export default function UserManagement() {
     setError('')
     
     try {
-      // Prepare data - only send password if it's filled
-      const submitData = {
-        name: formData.name.trim(),
-        email: formData.email.trim(),
-        phone: formData.phone.trim() || null,
-        address: formData.address.trim() || null,
-        role: formData.role
-      }
+      // Prepare data - only send changed fields for updates
+      const submitData = {}
       
-      if (formData.password) {
-        submitData.password = formData.password
+      if (editingUser) {
+        // For updates, only send changed fields
+        if (formData.name.trim() !== editingUser.name) {
+          submitData.name = formData.name.trim()
+        }
+        if (formData.email.trim() !== editingUser.email) {
+          submitData.email = formData.email.trim()
+        }
+        if (formData.phone.trim() !== (editingUser.phone || '')) {
+          submitData.phone = formData.phone.trim() || null
+        }
+        if (formData.address.trim() !== (editingUser.address || '')) {
+          submitData.address = formData.address.trim() || null
+        }
+        if (formData.role !== editingUser.role) {
+          submitData.role = formData.role
+        }
+        if (formData.password) {
+          submitData.password = formData.password
+        }
+      } else {
+        // For new users, send all required fields
+        submitData.name = formData.name.trim()
+        submitData.email = formData.email.trim()
+        submitData.phone = formData.phone.trim() || null
+        submitData.address = formData.address.trim() || null
+        submitData.role = formData.role
+        if (formData.password) {
+          submitData.password = formData.password
+        }
       }
 
       const result = editingUser
@@ -429,11 +451,19 @@ export default function UserManagement() {
                         </TableCell>
                         <TableCell>
                           <Badge 
-                            variant={user.role === 'admin' ? 'default' : 'secondary'}
-                            className={user.role === 'admin' ? 'bg-blue-600' : ''}
+                            variant="outline"
+                            className={
+                              user.role === 'admin' 
+                                ? 'border-red-200 bg-red-50 text-red-700 dark:border-red-800 dark:bg-red-950 dark:text-red-300' 
+                                : user.role === 'manager'
+                                ? 'border-blue-200 bg-blue-50 text-blue-700 dark:border-blue-800 dark:bg-blue-950 dark:text-blue-300'
+                                : 'border-gray-200 bg-gray-50 text-gray-700 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300'
+                            }
                           >
                             {user.role === 'admin' ? (
                               <><Shield className="h-3 w-3 mr-1" />Quản trị</>
+                            ) : user.role === 'manager' ? (
+                              <><Shield className="h-3 w-3 mr-1" />Nhân viên</>
                             ) : (
                               <><User className="h-3 w-3 mr-1" />Người dùng</>
                             )}
@@ -604,8 +634,9 @@ export default function UserManagement() {
                     disabled={saving}
                     className={`flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${validationErrors.role ? 'border-red-500' : ''}`}
                   >
-                    <option value="user">👤 Người dùng</option>
-                    <option value="admin">🛡️ Quản trị viên</option>
+                    <option value="user">Người dùng</option>
+                    <option value="manager">Nhân viên</option>
+                    <option value="admin">Quản trị viên</option>
                   </select>
                   {validationErrors.role && (
                     <p className="text-xs text-red-500">{validationErrors.role}</p>
