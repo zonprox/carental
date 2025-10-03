@@ -44,6 +44,7 @@ app.use(
         styleSrc: ["'self'", "'unsafe-inline'"],
         scriptSrc: [
           "'self'",
+          "'sha256-f9RY3bbyIgrweRa/kPriZmMVz+1X/RcvgbFk6dDVMDQ='", // Hash from CSP error
           ...(process.env.NODE_ENV === "development" 
             ? ["'unsafe-inline'", "'unsafe-eval'"] // Allow inline scripts in development for Vite HMR
             : []
