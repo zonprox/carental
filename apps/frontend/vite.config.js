@@ -1,8 +1,6 @@
 import { defineConfig, loadEnv } from "vite";
 import react from "@vitejs/plugin-react";
 import path from "path";
-import autoprefixer from 'autoprefixer';
-import cssnano from 'cssnano';
 
 // https://vitejs.dev/config/
 export default defineConfig(({ command: _command, mode }) => {
@@ -148,17 +146,7 @@ export default defineConfig(({ command: _command, mode }) => {
     // CSS optimization
     css: {
       devSourcemap: !isProduction,
-      postcss: {
-        plugins: isProduction ? [
-          autoprefixer,
-          cssnano({
-            preset: ['default', {
-              discardComments: { removeAll: true },
-              normalizeWhitespace: true,
-            }],
-          }),
-        ] : [autoprefixer],
-      },
+      postcss: './postcss.config.js',
     },
     
     // Dependency optimization
