@@ -303,6 +303,33 @@ The project includes a complete CI/CD pipeline that:
 - Use conventional commit messages
 - Ensure all tests pass before submitting PR
 
+## 🚨 Troubleshooting
+
+### VPS Deployment Issues
+
+#### Error: "node: --optimize-for-size is not allowed in NODE_OPTIONS"
+**Solution**: Remove `NODE_OPTIONS` from your `.env` file
+```bash
+sed -i '/NODE_OPTIONS/d' .env
+```
+
+#### Error: "exited - code 9" (Out Of Memory)
+**Causes**: 
+- VPS has insufficient RAM (< 4GB)
+- Memory limits too low in Docker Compose
+
+**Solutions**:
+1. Upgrade VPS to 4GB+ RAM (recommended)
+2. Or reduce memory limits in `docker-compose.prod.yml`
+
+#### Node Version Mismatch
+**Fixed**: Dockerfile now uses Node 22-alpine (matches package.json requirements)
+
+**📖 For detailed VPS deployment troubleshooting, see:**
+- [QUICK-FIX-VPS.md](./QUICK-FIX-VPS.md) - Quick 5-minute fix
+- [VPS-DEPLOYMENT-FIX.md](./VPS-DEPLOYMENT-FIX.md) - Detailed guide
+- Run health check: `./scripts/check-deployment.sh`
+
 ## 📝 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

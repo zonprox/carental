@@ -1,6 +1,6 @@
 # Multi-stage production Dockerfile for CarRental Application
 # Stage 1: Build Frontend
-FROM node:20-alpine AS frontend-builder
+FROM node:22-alpine AS frontend-builder
 
 # Set working directory
 WORKDIR /app/frontend
@@ -16,7 +16,7 @@ COPY apps/frontend/ ./
 RUN npm run build
 
 # Stage 2: Build Backend
-FROM node:20-alpine AS backend-builder
+FROM node:22-alpine AS backend-builder
 
 # Set working directory
 WORKDIR /app/backend
@@ -29,7 +29,7 @@ RUN npm ci --only=production --no-audit --no-fund
 COPY apps/backend/ ./
 
 # Stage 3: Production Runtime
-FROM node:20-alpine AS production
+FROM node:22-alpine AS production
 
 # Install security updates and required packages
 RUN apk update && apk upgrade && \
@@ -86,5 +86,6 @@ EXPOSE 5000 9090
 # Use dumb-init to handle signals properly
 ENTRYPOINT ["dumb-init", "--"]
 
-# Start the application
-CMD ["node", "server.js"]
+# Start the application with memory optimization
+# Adjust max-old-space-size based on available RAM (75% of container limit)
+CMD ["node", "--max-old-space-size=1536", "src/server.js"]
