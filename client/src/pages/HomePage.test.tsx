@@ -10,6 +10,6 @@ describe('HomePage', () => {
         <HomePage />
       </BrowserRouter>
     );
-    expect(screen.getByText('Find Your Perfect Ride')).toBeDefined();
+    expect(screen.getByText('Tìm chiếc xe hoàn hảo')).toBeDefined();
   });
 });
