@@ -1,0 +1,117 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Car {
+  id              String    @id @default(cuid())
+  name            String
+  brand           String
+  type            String
+  dailyPrice      Float
+  priceWithDriver Float?    @default(0)
+  featured        Boolean   @default(false)
+  description     String?   @db.Text
+  imageUrl        String?
+  transmission    String    @default("Automatic")
+  fuelType        String    @default("Gasoline")
+  seats           Int       @default(5)
+  year            Int?
+  mileage         String?
+  features        String[]  @default([])
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  bookings        Booking[]
+
+  @@index([type])
+  @@index([featured])
+}
+
+model User {
+  id                  String    @id @default(cuid())
+  email               String    @unique
+  name                String?
+  password            String
+  phone               String?
+  address             String?
+  isAdmin             Boolean   @default(false)
+  // Verification fields
+  isVerified          Boolean   @default(false)
+  verificationStatus  String    @default("unverified") // unverified, pending, verified, rejected
+  idCardUrl           String?
+  driverLicenseUrl    String?
+  verificationNotes   String?   @db.Text
+  verifiedAt          DateTime?
+  verifiedBy          String?
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+  bookings            Booking[]
+
+  @@index([verificationStatus])
+}
+
+model Booking {
+  id                String    @id @default(cuid())
+  carId             String
+  car               Car       @relation(fields: [carId], references: [id], onDelete: Cascade)
+  userId            String
+  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  startDate         DateTime
+  endDate           DateTime
+  withDriver        Boolean   @default(false)
+  
+  // Pricing
+  basePrice         Float
+  driverPrice       Float     @default(0)
+  totalPrice        Float
+  depositAmount     Float     @default(0)
+  paidAmount        Float     @default(0)
+  
+  // Additional charges
+  cleaningFee       Float     @default(0)
+  damageFee         Float     @default(0)
+  overtimeFee       Float     @default(0)
+  fuelFee           Float     @default(0)
+  otherFees         Float     @default(0)
+  feesNotes         String?   @db.Text
+  
+  // Status workflow: pending → verified → confirmed → delivered → active → returning → completed/cancelled
+  status            String    @default("pending")
+  
+  // Customer info
+  customerName      String
+  customerEmail     String
+  customerPhone     String
+  deliveryAddress   String?
+  notes             String?   @db.Text
+  
+  // Delivery & Return
+  deliveryDate      DateTime?
+  deliveryNotes     String?   @db.Text
+  returnDate        DateTime?
+  returnNotes       String?   @db.Text
+  actualReturnDate  DateTime?
+  
+  // Verification
+  verifiedAt        DateTime?
+  confirmedAt       DateTime?
+  deliveredAt       DateTime?
+  completedAt       DateTime?
+  
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  @@index([carId])
+  @@index([userId])
+  @@index([status])
+  @@index([startDate])
+}
+
+model AppConfig {
+  key   String @id
+  value String
+}
